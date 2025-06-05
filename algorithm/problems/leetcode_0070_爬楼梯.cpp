@@ -1,97 +1,75 @@
-#include <iostream>
-#include <vector>
-#include <time.h>
+#include "common.hpp"
 
-#define STAIRS 40
-
-// 题目: 每次只能走1步或者两步，求计算 N 级台阶最多拥有多少种走法
+// 题目: 每次只能走1步或者两步，求计算 N 级台阶总共需要多少种走法
 //
 // 假设有 3 级台阶，那么就拥有 3 种走法，分别是:
 // 1 1 1
 // 1 2
 // 2 1
+//
+// 设跳上 n 级台阶有 f(n) 种跳法。在所有跳法中，青蛙的最后一步只有两种情况：跳上 1 级或 2 级台阶。
+//  1. 当为 1 级台阶： 剩 n − 1 个台阶，此情况共有 f(n − 1) 种跳法。
+//  2. 当为 2 级台阶： 剩 n − 2 个台阶，此情况共有 f(n − 2) 种跳法。
+// 即 f(n) 为以上两种情况之和，即 f(n) = f(n − 1) + f(n − 2) ，以上递推性质为斐波那契数列。因此，本题可转化为 求斐波那契数列的第 n 项，区别仅在于初始值不同：
+//  * 青蛙跳台阶问题：f(0) = 1, f(1) = 1, f(2) = 2 。
+//  * 斐波那契数列问题：f(0) = 0, f(1) = 1, f(2) = 1 。
 
-// 暴力递归法
-int stairs_100_1_impl(int stair) {
-  if (stair <= 0) {
+// 穷举法
+int32_t solution1(int32_t n) {
+  if (n <= 0) {
     return 0;
   }
-  if (stair == 1) {
+  if (n == 1) {
     return 1;
   }
-  if (stair == 2) {
+  if (n == 2) {
     return 2;
   }
 
-  return stairs_100_1_impl(stair - 1) + stairs_100_1_impl(stair - 2);
-}
-void stairs_100_1(int stair) {
-  clock_t start,end;
-  start = clock();
-  std::cout << stairs_100_1_impl(stair) << std::endl;
-  end = clock();
-
-  std::cout << end - start << std::endl;
+  return solution1(n - 1) + solution1(n - 2);
 }
 
 // 记忆优化法
-int stairs_100_2_impl(int stair, std::vector<int> &mem) {
-  if (mem[stair] != -1) {
-    return mem[stair];
+int32_t solution2(int32_t n, std::map<int32_t, int32_t> &m) {
+  if (auto it = m.find(n); it != m.end()) {
+    return it->second;
   }
-  if (stair <= 0) {
+
+  int32_t sum;
+  if (n <= 0) {
     return 0;
-  }
-  if (stair == 1) {
+  } else if (n == 1) {
     return 1;
-  }
-  if (stair == 2) {
+  } else if (n == 2) {
     return 2;
+  } else {
+    sum = solution2(n - 1, m) + solution2(n - 2, m);
   }
 
-  mem[stair] = stairs_100_2_impl(stair - 1, mem) + stairs_100_2_impl(stair - 2, mem);
-
-  return mem[stair];
-}
-void stairs_100_2(int stair) {
-  clock_t start,end;
-
-  std::vector<int> mem(stair + 1, -1);
-  start = clock();
-  std::cout << stairs_100_2_impl(stair, mem) << std::endl;
-  end = clock();
-
-  std::cout << end - start << std::endl;
+  m.emplace(n, sum);
+  return sum;
 }
 
-// 自底向上的动态规划
-int stairs_100_3_impl(int stair) {
-  std::vector<int> dp(stair + 1, -1);
-  dp[0] = 0;
-  dp[1] = 1;
-  dp[2] = 2;
+// 动态规划
+int32_t solution3(int32_t n) {
+  if (n == 0) return 0;
+  int32_t dp[2] = { 1, 2 };
 
-  for (int i = 3; i <= stair; ++i) {
-    dp[i] = dp[i - 1] + dp[i - 2];
+  for (int32_t i = 3; i <= n; i++) {
+    int32_t sum = dp[1] + dp[0];
+    dp[0] = dp[1];
+    dp[1] = sum;
   }
 
-  return dp[stair];
-}
-void stairs_100_3(int stair) {
-  clock_t start,end;
-
-  start = clock();
-  std::cout << stairs_100_3_impl(stair) << std::endl;
-  end = clock();
-
-  std::cout << end - start << std::endl;
+  return dp[1];
 }
 
+int32_t main(void) {
+  std::map<int32_t, int32_t> m;
 
-int main(void) {
-  stairs_100_1(STAIRS);
-  stairs_100_2(STAIRS);
-  stairs_100_3(STAIRS);
+  solution1(40);
+  solution2(40, m);
+  solution3(40);
 
   return EXIT_SUCCESS;
 }

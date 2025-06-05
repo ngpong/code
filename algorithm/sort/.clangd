@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=https://json.schemastore.org/clangd.json
+
+Diagnostics:
+  ClangTidy:
+    Add: [
+      clang-analyzer-*,
+      performance-*,
+      bugprone-*,
+    ]
+    Remove: [
+      performance-avoid-endl,
+      bugprone-easily-swappable-parameters,
+      bugprone-lambda-function-name,
+      bugprone-implicit-widening-of-multiplication-result,
+      bugprone-narrowing-conversions,
+      bugprone-reserved-identifier
+    ]
+    CheckOptions:
+      performance-unnecessary-value-param.AllowedTypes: 'std::shared_ptr'
+---
+If:
+  PathMatch: [
+    /usr/include/c\+\+/.*,
+    /usr/include/x86_64-linux-gnu/c\+\+/.*,
+    /usr/local/include/.*
+  ]
+CompileFlags:
+  Add: -ferror-limit=0
+Diagnostics:
+  Suppress: '*'

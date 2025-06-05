@@ -16,47 +16,36 @@ int solution_1(TreeNode *root) {
   return std::max(l_deep, r_deep) + 1;
 }
 
-int solution_2(TreeNode *it) {
-  int dp = 0, max = 0;
-
-  std::stack<std::pair<TreeNode *, int>> s;
-  while (it || !s.empty()) {
-    while (it) {
-      // 0x1: 更新最大层数
-      max = std::max(max, ++dp);
-
-      // 0x2: 对应左子树为空的情况，此时开始遍历其当前节点下的右子树； 
-      //
-      //      由于下面的逻辑需要在遍历完一条路径的最终节点后按照栈的顺序挨个弹出上层节点并遍历
-      //      其右子树。所以，如果此时还要将该节点入栈的话，则后续会产生重复的遍历以至死循环；
-      if (!it->left) {
-        it = it->right;
-      } 
-      // 0x3: 对应左子树不为空的情况，此时开始遍历其当前节点下的左子树；
-      //
-      //      总是从左子树开始，并不会立刻开始遍历当前节点可能存在的右子树。相应的，右子树的遍
-      //      历工作会暂时缓存至栈中，并等待下面的逻辑执行；
-      //
-      //      要注意的是，为了方便后续遍历该节点的右子树时方便计算，栈中还缓存了右子树起始位置
-      //      所在的层数dp。
-      else {
-        it = it->left;
-        s.push(std::make_pair(it, dp));
-      }
-    }
-
-    // 0x4: 栈中存放的是还未遍历右子树的节点，该步骤逐步弹出这些节点并完成后续的遍历工作；
-    if (!s.empty()) {
-      auto &pair = s.top();
-
-      it = pair.first->right;
-      dp = pair.second;
-
-      s.pop();
-    }
+int solution_2(TreeNode *root) {
+  if (!root) {
+    return 0;
   }
 
-  return max;
+  std::queue<TreeNode *> q;
+  q.push(root);
+
+  int32_t depth = 0;
+  while (!q.empty()) {
+    int32_t sz = q.size();
+    while (sz > 0) {
+      TreeNode *node = q.front();
+      q.pop();
+
+      if (node->left) {
+        q.push(node->left);
+      }
+
+      if (node->right) {
+        q.push(node->right);
+      }
+
+      sz--;
+    }
+
+    depth++;
+  }
+
+  return depth;
 }
 
 int main(int argc, char *argv[]) {

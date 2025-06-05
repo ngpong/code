@@ -1,38 +1,35 @@
 #include "common.hpp"
 
-// 基数排序
-
-void solution_1(Array &datas) {
-  std::int32_t max_val = datas[0];
-  for (std::size_t i = 0; i < datas.size(); ++i) {
-    if (max_val < datas[i]) {
-      max_val = datas[i];
+void solution_1(Array &arr, int32_t size) {
+  int32_t max = arr[0];
+  for (int32_t i = 1; i < size; i++) {
+    if (arr[i] > max) {
+      max = arr[i];
     }
   }
+  max += 1;
 
-  max_val += 1;
+  Array counter(max, 0x0);
+  Array sorter(size, 0x0);
 
-  std::int32_t count_arr[max_val]; std::memset(count_arr, 0, sizeof(count_arr));
-  std::int32_t sort_arr[datas.size()]; std::memset(sort_arr, 0, sizeof(sort_arr));
-
-  for (std::size_t i = 0; i < datas.size(); ++i) {
-    count_arr[datas[i]] += 1;
+  for (int32_t i = 0; i < size; i++) {
+    counter[arr[i]] += 1;
   }
 
-  for (std::size_t i = 1; i < max_val; ++i) {
-    count_arr[i] += count_arr[i - 1];
+  for (int32_t i = 1; i < max; i++) {
+    counter[i] += counter[i - 1];
   }
 
-  for (std::size_t i = 0; i < datas.size(); ++i) {
-    sort_arr[--count_arr[datas[i]]] = datas[i];
+  for (int32_t i = 0; i < size; i++) {
+    sorter[--counter[arr[i]]] = arr[i];
   }
 
-  for (std::size_t i = 0; i < datas.size(); ++i) {
-    datas[i] = sort_arr[i];
+  for (int32_t i = 0; i < size; i++) {
+    arr[i] = sorter[i];
   }
 }
 
-std::int32_t main(std::int32_t argc, char *argv[]) {
+int32_t main(int32_t argc, char *argv[]) {
   solution_test({
     { solution_1, "solution_1" },
   });

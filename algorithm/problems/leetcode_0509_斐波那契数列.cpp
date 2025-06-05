@@ -1,37 +1,40 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
-#include <math.h>
-#include <time.h>
+#include "common.hpp"
 
-int fibonacci(unsigned int n) {
+// 自顶向下的递归
+int32_t fibonacci1(int32_t n) {
   if (n <= 2) return n == 0 ? 0 : 1;
-
-  return fibonacci(n - 1) + fibonacci(n - 2);
+  return fibonacci1(n - 1) + fibonacci1(n - 2);
 }
 
-void foo_recursion(void) {
-  printf("fibonacci recursion implement\n");
-  for (int i = 0; i < 10; ++i) {
-    printf("%d(%d)\n", fibonacci(i), i);
+int32_t fibonacci2(int32_t n, std::map<int32_t, int32_t>& m) {
+  if (auto it = m.find(n); it != m.end()) {
+    return it->second;
   }
+
+  int32_t sum;
+  if (n == 0) {
+    sum = 0;
+  } else if (n <= 2) {
+    sum = 1;
+  } else {
+    sum = fibonacci2(n - 1, m) + fibonacci2(n - 2, m);
+  }
+  m[n] = sum;
+
+  return sum;
 }
 
-void foo_unrecursion(void) {
-  printf("fibonacci unrecursion implement\n");
+int32_t fibonacci3(int32_t n) {
+  if (n == 0) return 0;
+  int32_t dp[2] = { 1, 1 };
 
-  int arrary[10] = { 0 };
-  arrary[0] = 0;
-  arrary[1] = 1;
-
-  for (size_t i = 2; i < 10; ++i) {
-    arrary[i] = (arrary[i - 1]) + (arrary[i - 2]);
+  for (int32_t i = 3; i <= n; i++) {
+    int32_t sum = dp[0] + dp[1];
+    dp[0] = dp[1];
+    dp[1] = sum;
   }
 
-  for (int i = 0; i < 10; ++i) {
-    printf("%d(%d)\n", arrary[i], i);
-  }
+  return dp[n];
 }
 
 int main(void) {

@@ -1,8 +1,11 @@
 #include <algorithm>
 #include <array>
 #include <bit>
+#include <cstdlib>
+#include <cmath>
 #include <bitset>
 #include <chrono>
+#include <iomanip>
 #include <cstring>
 #include <ctime>
 #include <functional>
@@ -21,9 +24,9 @@
 
 #define MAX_TEST_CASE 100000
 
-using Array = std::vector<std::int32_t>;
+using Array = std::vector<int32_t>;
 
-using pair_i_i = std::pair<std::int32_t, std::int32_t>;
+using pair_i_i = std::pair<int32_t, int32_t>;
 
 template <class F>
 struct y_combinator {
@@ -41,20 +44,20 @@ y_combinator<std::decay_t<F>> make_y_combinator(F &&f) {
 }
 
 struct ListNode {
-  int val;
+  int32_t val;
   ListNode *next;
   ListNode() : val(0), next(nullptr) {}
-  ListNode(int x) : val(x), next(nullptr) {}
-  ListNode(int x, ListNode *next) : val(x), next(next) {}
+  ListNode(int32_t x) : val(x), next(nullptr) {}
+  ListNode(int32_t x, ListNode *next) : val(x), next(next) {}
 };
 
 struct TreeNode {
-  int val;
+  int32_t val;
   TreeNode *left;
   TreeNode *right;
   TreeNode() : val(0), left(nullptr), right(nullptr) {}
-  TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-  TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+  TreeNode(int32_t x) : val(x), left(nullptr), right(nullptr) {}
+  TreeNode(int32_t x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
 template<typename T>
@@ -99,8 +102,16 @@ std::ostream &operator<<(std::ostream &os, TreeNode *root) {
 std::ostream &operator<<(std::ostream &os, ListNode *list) {
   auto it = list;
   while (it) {
-    std::cout << "[" << static_cast<void *>(it) << "] " << it->val << (it->next ? " -> " : "") << std::endl;
-    ;
+    const void *address = static_cast<void *>(it);
+    std::stringstream ss;
+    ss << address;
+    const std::string& pointer = ss.str();
+    const std::string& msg = "[" + pointer + "] " + std::to_string(it->val);
+
+    std::cout << msg << std::endl;
+    if (it->next) {
+      std::cout << std::setw(14) << "⬇️" << std::endl;
+    }
 
     it = it->next;
   }
@@ -112,27 +123,27 @@ Array get_partially_array() {
   static Array ret;
 
   if (ret.empty()) {
-    ret = std::vector<std::int32_t>(MAX_TEST_CASE, 0x0);
+    ret = std::vector<int32_t>(MAX_TEST_CASE, 0x0);
 
     std::mt19937 rng(std::random_device{}());
 
     // 前70%部分有序
-    int orderedPartSize = MAX_TEST_CASE * 0.7;
-    for (int i = 0; i < orderedPartSize; ++i) {
+    int32_t orderedPartSize = MAX_TEST_CASE * 0.7;
+    for (int32_t i = 0; i < orderedPartSize; ++i) {
       ret[i] = i;
     }
 
     // 剩余30%部分随机
-    std::uniform_int_distribution<int> dist(0, MAX_TEST_CASE * 2);
-    for (int i = orderedPartSize; i < MAX_TEST_CASE; ++i) {
+    std::uniform_int_distribution<int32_t> dist(0, MAX_TEST_CASE * 2);
+    for (int32_t i = orderedPartSize; i < MAX_TEST_CASE; ++i) {
       ret[i] = dist(rng);
     }
 
     // 在有序部分中随机交换少量元素（10%）
-    int swapCount = orderedPartSize * 0.1;
-    for (int i = 0; i < swapCount; ++i) {
-      int idx1 = rng() % orderedPartSize;
-      int idx2 = rng() % orderedPartSize;
+    int32_t swapCount = orderedPartSize * 0.1;
+    for (int32_t i = 0; i < swapCount; ++i) {
+      int32_t idx1 = rng() % orderedPartSize;
+      int32_t idx2 = rng() % orderedPartSize;
       std::swap(ret[idx1], ret[idx2]);
     }
   }
@@ -144,9 +155,9 @@ Array &get_total_random_array() {
   static Array ret;
 
   if (ret.empty()) {
-    ret = std::vector<std::int32_t>(MAX_TEST_CASE, 0x0);
+    ret = std::vector<int32_t>(MAX_TEST_CASE, 0x0);
 
-    for (int i = 0; i < MAX_TEST_CASE; ++i) {
+    for (int32_t i = 0; i < MAX_TEST_CASE; ++i) {
       ret[i] = i;
     }
 
@@ -157,7 +168,7 @@ Array &get_total_random_array() {
   return ret;
 }
 
-ListNode *get_list_desc(std::int32_t begin = 10, std::int32_t end = -2) {
+ListNode *get_list_desc(int32_t begin = 10, int32_t end = -2) {
   if (begin < end) {
     return nullptr;
   } else {
@@ -168,7 +179,7 @@ ListNode *get_list_desc(std::int32_t begin = 10, std::int32_t end = -2) {
   }
 }
 
-ListNode *get_list(std::int32_t end = 10, std::int32_t idx = 0) {
+ListNode *get_list(int32_t end = 10, int32_t idx = 0) {
   if (idx > end) {
     return nullptr;
   } else {
@@ -179,10 +190,10 @@ ListNode *get_list(std::int32_t end = 10, std::int32_t idx = 0) {
   }
 }
 
-TreeNode *get_binary_tree(std::int32_t size) {
+TreeNode *get_binary_tree(int32_t size) {
   std::queue<TreeNode *> s;
 
-  std::int32_t idx = 1;
+  int32_t idx = 1;
 
   TreeNode *root = new TreeNode(idx++);
   s.push(root);

@@ -2,34 +2,34 @@
 
 // 桶排序
 //  * avg  ：O(n+k)
-//  * worst: O(n^2 * k) 
-//  * best : 
+//  * worst: O(n^2 * k)
+//  * best :
 //
 //
 
-void solution_1(Array &array) {
-  std::int32_t max_val = array[0];
-  for (std::size_t i = 0; i < array.size(); ++i) {
-    if (array[i] > max_val) {
-      max_val = array[i];
+void solution_1(Array &arr, int32_t size) {
+  int32_t max = arr[0];
+  for (int32_t i = 1; i < size; i++) {
+    if (arr[i] > max) {
+      max = arr[i];
     }
   }
-  max_val += 1;
+  max++;
 
-  std::vector<std::int32_t> counted_arr(max_val, 0x0);
-  for (std::size_t i = 0; i < array.size(); ++i) {
-    counted_arr[array[i]] += 1;
+  Array bucket(max, 0x0);
+  for (int32_t i = 0; i < size; i++) {
+    bucket[arr[i]]++;
   }
 
-  std::size_t idx = 0;
-  for (std::size_t i = 0; i < counted_arr.size(); ++i) {
-    for (std::size_t j = 0; j < counted_arr[i]; ++j) {
-      array[idx++] = i;
+  int32_t k = 0;
+  for (int32_t i = 0; i < max; i++) {
+    for (int32_t j = 0; j < bucket[i]; j++) {
+      arr[k++] = i;
     }
   }
 }
 
-std::int32_t main (std::int32_t argc, char *argv[]) {
+int32_t main (int32_t argc, char *argv[]) {
   solution_test({
     { solution_1, "solution_1" },
   });

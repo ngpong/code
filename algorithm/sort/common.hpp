@@ -34,8 +34,8 @@
 #define BOLDCYAN "\033[1m\033[36m"    /* Bold Cyan */
 #define BOLDWHITE "\033[1m\033[37m"   /* Bold White */
 
-using Array      = std::vector<std::int32_t>;
-using Solution_F = std::function<void(Array &)>;
+using Array      = std::vector<int32_t>;
+using Solution_F = std::function<void(Array &, int32_t)>;
 
 template <class F>
 struct y_combinator {
@@ -55,7 +55,7 @@ y_combinator<std::decay_t<F>> make_y_combinator(F &&f) {
   return { std::forward<F>(f) };
 }
 
-std::ostream &operator<<(std::ostream &os, const std::vector<std::int32_t> &datas) {
+std::ostream &operator<<(std::ostream &os, const std::vector<int32_t> &datas) {
   for (const auto &data : datas) {
     std::cout << data << " ";
   }
@@ -66,11 +66,11 @@ std::ostream &operator<<(std::ostream &os, const std::vector<std::int32_t> &data
 using __MapValueType = std::tuple<Array, Array, std::string>;
 
 // 部分有序数组
-std::tuple<Array, Array, std::string> get_partially(std::int32_t size) {
-  static std::map<std::int32_t, std::tuple<Array, Array, std::string>> mm;
+std::tuple<Array, Array, std::string> get_partially(int32_t size) {
+  static std::map<int32_t, std::tuple<Array, Array, std::string>> mm;
 
   if (!mm.count(size)) {
-    auto &tp = mm.emplace(size, std::make_tuple<Array, Array, std::string>(std::vector<std::int32_t>(size, 0x0), {}, __FUNCTION__)).first->second;
+    auto &tp = mm.emplace(size, std::make_tuple<Array, Array, std::string>(std::vector<int32_t>(size, 0x0), {}, __FUNCTION__)).first->second;
 
     std::mt19937 rng(std::random_device{}());
 
@@ -103,10 +103,10 @@ std::tuple<Array, Array, std::string> get_partially(std::int32_t size) {
 
 // 波浪形数组：交替递增和递减的数组
 std::tuple<Array, Array, std::string> get_wave(int size) {
-  static std::map<std::int32_t, std::tuple<Array, Array, std::string>> mm;
+  static std::map<int32_t, std::tuple<Array, Array, std::string>> mm;
 
   if (!mm.count(size)) {
-    auto &tp = mm.emplace(size, std::make_tuple<Array, Array, std::string>(std::vector<std::int32_t>(size, 0x0), {}, __FUNCTION__)).first->second;
+    auto &tp = mm.emplace(size, std::make_tuple<Array, Array, std::string>(std::vector<int32_t>(size, 0x0), {}, __FUNCTION__)).first->second;
 
     for (int i = 0; i < size; ++i) {
       std::get<0>(tp)[i] = (i % 2 == 0) ? i : size - i;
@@ -121,10 +121,10 @@ std::tuple<Array, Array, std::string> get_wave(int size) {
 
 // 大量重复元素的数组
 std::tuple<Array, Array, std::string> get_duplicates(int size) {
-  static std::map<std::int32_t, std::tuple<Array, Array, std::string>> mm;
+  static std::map<int32_t, std::tuple<Array, Array, std::string>> mm;
 
   if (!mm.count(size)) {
-    auto &tp = mm.emplace(size, std::make_tuple<Array, Array, std::string>(std::vector<std::int32_t>(size, 0x0), {}, __FUNCTION__)).first->second;
+    auto &tp = mm.emplace(size, std::make_tuple<Array, Array, std::string>(std::vector<int32_t>(size, 0x0), {}, __FUNCTION__)).first->second;
 
     // 设定随机数种子
     std::srand(static_cast<unsigned>(std::time(0)));
@@ -149,10 +149,10 @@ std::tuple<Array, Array, std::string> get_duplicates(int size) {
 
 // 完全无序的数组（不包含重复元素）
 std::tuple<Array, Array, std::string> get_random(int size) {
-  static std::map<std::int32_t, std::tuple<Array, Array, std::string>> mm;
+  static std::map<int32_t, std::tuple<Array, Array, std::string>> mm;
 
   if (!mm.count(size)) {
-    auto &tp = mm.emplace(size, std::make_tuple<Array, Array, std::string>(std::vector<std::int32_t>(size, 0x0), {}, __FUNCTION__)).first->second;
+    auto &tp = mm.emplace(size, std::make_tuple<Array, Array, std::string>(std::vector<int32_t>(size, 0x0), {}, __FUNCTION__)).first->second;
 
     for (int i = 0; i < size; ++i) {
       std::get<0>(tp)[i] = i;
@@ -170,10 +170,10 @@ std::tuple<Array, Array, std::string> get_random(int size) {
 
 // 升序排序的数组
 std::tuple<Array, Array, std::string> get_sorted_asc(int size) {
-  static std::map<std::int32_t, std::tuple<Array, Array, std::string>> mm;
+  static std::map<int32_t, std::tuple<Array, Array, std::string>> mm;
 
   if (!mm.count(size)) {
-    auto &tp = mm.emplace(size, std::make_tuple<Array, Array, std::string>(std::vector<std::int32_t>(size, 0x0), {}, __FUNCTION__)).first->second;
+    auto &tp = mm.emplace(size, std::make_tuple<Array, Array, std::string>(std::vector<int32_t>(size, 0x0), {}, __FUNCTION__)).first->second;
 
     for (int i = 0; i < size; ++i) {
       std::get<0>(tp)[i] = i;
@@ -188,10 +188,10 @@ std::tuple<Array, Array, std::string> get_sorted_asc(int size) {
 
 // 降序排序的数组
 std::tuple<Array, Array, std::string> get_sorted_desc(int size) {
-  static std::map<std::int32_t, std::tuple<Array, Array, std::string>> mm;
+  static std::map<int32_t, std::tuple<Array, Array, std::string>> mm;
 
   if (!mm.count(size)) {
-    auto &tp = mm.emplace(size, std::make_tuple<Array, Array, std::string>(std::vector<std::int32_t>(size, 0x0), {}, __FUNCTION__)).first->second;
+    auto &tp = mm.emplace(size, std::make_tuple<Array, Array, std::string>(std::vector<int32_t>(size, 0x0), {}, __FUNCTION__)).first->second;
 
     for (int i = 0; i < size; ++i) {
       std::get<0>(tp)[i] = size - i;
@@ -218,17 +218,17 @@ void solution_test(std::vector<std::pair<Solution_F, std::string>> regs) {
 
       std::string outpur_msg = name + "/" + datas_name + ":";
 
-      func(source_datas);
+      func(source_datas, source_datas.size());
 
       if (std::equal(source_datas.begin(), source_datas.end(), sorted_datas.begin())) {
-        std::size_t space_length = 84 - (outpur_msg.size() + 3);
-        for (std::size_t i = 0; i < space_length; ++i) {
+        int32_t space_length = 84 - (outpur_msg.size() + 3);
+        for (int32_t i = 0; i < space_length; ++i) {
           outpur_msg += " ";
         }
         outpur_msg = outpur_msg + GREEN + "OK!" + RESET;
       } else {
-        std::size_t space_length = 84 - (outpur_msg.size() + 4);
-        for (std::size_t i = 0; i < space_length; ++i) {
+        int32_t space_length = 84 - (outpur_msg.size() + 4);
+        for (int32_t i = 0; i < space_length; ++i) {
           outpur_msg += " ";
         }
         outpur_msg = outpur_msg + RED + "OPS!" + RESET;
@@ -260,64 +260,32 @@ void solution_benchmark(std::vector<std::pair<Solution_F, std::string>> regs) {
 
   benchmark::Initialize(nullptr, nullptr);
 
-  for (auto &pair : regs) {
-    auto &func = pair.first;
-    auto &name = pair.second;
+  Array arr_random = std::get<0>(get_random(MAX_TEST_CASE));
+  Array arr_sorted_asc = std::get<0>(get_sorted_asc(MAX_TEST_CASE));
+  Array arr_sorted_desc = std::get<0>(get_sorted_desc(MAX_TEST_CASE));
+  Array arr_duplicates = std::get<0>(get_duplicates(MAX_TEST_CASE));
+  Array arr_wave = std::get<0>(get_wave(MAX_TEST_CASE));
+  Array arr_partially = std::get<0>(get_partially(MAX_TEST_CASE));
 
-    auto t1 = get_random(MAX_TEST_CASE);
-    auto t2 = get_sorted_asc(MAX_TEST_CASE);
-    auto t3 = get_sorted_desc(MAX_TEST_CASE);
-    auto t4 = get_duplicates(MAX_TEST_CASE);
-    auto t5 = get_wave(MAX_TEST_CASE);
-    auto t6 = get_partially(MAX_TEST_CASE);
+  for(auto& t : {
+    get_random(MAX_TEST_CASE),
+    get_sorted_asc(MAX_TEST_CASE),
+    get_sorted_desc(MAX_TEST_CASE),
+    get_duplicates(MAX_TEST_CASE),
+    get_wave(MAX_TEST_CASE),
+    get_partially(MAX_TEST_CASE)
+  }) {
+    for (auto &pair : regs) {
+      auto &func = pair.first;
+      auto &name = pair.second;
 
-    benchmark::RegisterBenchmark(name + "/" + std::get<2>(t1), [=](benchmark::State &state) {
-      for (auto _ : state) {
-        Array datas = std::get<0>(t1);
-
-        func(datas);
-      }
-    });
-
-    benchmark::RegisterBenchmark(name + "/" + std::get<2>(t2), [=](benchmark::State &state) {
-      for (auto _ : state) {
-        Array datas = std::get<0>(t2);
-
-        func(datas);
-      }
-    });
-
-    benchmark::RegisterBenchmark(name + "/" + std::get<2>(t3), [=](benchmark::State &state) {
-      for (auto _ : state) {
-        Array datas = std::get<0>(t3);
-
-        func(datas);
-      }
-    });
-
-    benchmark::RegisterBenchmark(name + "/" + std::get<2>(t4), [=](benchmark::State &state) {
-      for (auto _ : state) {
-        Array datas = std::get<0>(t4);
-
-        func(datas);
-      }
-    });
-
-    benchmark::RegisterBenchmark(name + "/" + std::get<2>(t5), [=](benchmark::State &state) {
-      for (auto _ : state) {
-        Array datas = std::get<0>(t5);
-
-        func(datas);
-      }
-    });
-
-    benchmark::RegisterBenchmark(name + "/" + std::get<2>(t6), [=](benchmark::State &state) {
-      for (auto _ : state) {
-        Array datas = std::get<0>(t6);
-
-        func(datas);
-      }
-    });
+      benchmark::RegisterBenchmark(std::get<2>(t) + "/" + name, [=](benchmark::State &state) {
+        for (auto _ : state) {
+          Array datas = std::get<0>(t);
+          func(datas, datas.size());
+        }
+      });
+    }
   }
 
   benchmark::RunSpecifiedBenchmarks();

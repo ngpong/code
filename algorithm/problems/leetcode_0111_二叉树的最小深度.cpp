@@ -7,7 +7,7 @@
 
 #include "common.hpp"
 
-int solution_1(TreeNode *root) {
+int solution1(TreeNode *root) {
   int min = 0;
 
   auto _solution = make_y_combinator([&](auto _solution, TreeNode *node, int depth = 0) -> void {
@@ -30,7 +30,7 @@ int solution_1(TreeNode *root) {
   return min;
 }
 
-int solution_2(TreeNode *root) {
+int solution2(TreeNode *root) {
   int min = 0;
 
   if (!root) {
@@ -49,7 +49,7 @@ int solution_2(TreeNode *root) {
         it = it->left;
       } else if (it->right) {
         it = it->right;
-      } else {  
+      } else {
         min = !min ? dp : std::min(min, dp);
         it = nullptr;
       }
@@ -57,7 +57,7 @@ int solution_2(TreeNode *root) {
 
     if (!s.empty()) {
       auto &pair = s.top();
-      
+
       it = pair.first->right;
       dp = pair.second;
 
@@ -68,48 +68,48 @@ int solution_2(TreeNode *root) {
   return min;
 }
 
+int solution3(TreeNode *root) {
+  if (!root) {
+    return 0;
+  }
+
+  std::list<TreeNode *> lst;
+  lst.push_back(root);
+
+  int32_t depth = 0;
+  while (!lst.empty()) {
+    depth++;
+
+    int32_t sz = lst.size();
+    while (sz > 0) {
+      TreeNode *node = lst.front();
+      lst.pop_front();
+
+      if (!node->left && !node->right) {
+        return depth;
+      }
+
+      if (node->left) {
+        lst.push_back(node->left);
+      }
+
+      if (node->right) {
+        lst.push_back(node->right);
+      }
+
+      sz--;
+    }
+  }
+
+  return depth;
+}
+
 int main(int argc, char *argv[]) {
   TreeNode *bt = get_binary_tree();
   std::cout << bt << std::endl;
 
-  std::cout << solution_1(bt) << std::endl;
-  std::cout << solution_2(bt) << std::endl;
+  std::cout << solution1(bt) << std::endl;
+  std::cout << solution2(bt) << std::endl;
 
   return 0;
 }
-
-
-// #include <algorithm>
-// #include <queue>
-//
-// using namespace std;
-//
-// struct node {
-//   char elem;
-//   struct node *left;
-//   struct node *right;
-// };
-//
-// int binary_tree_min_level(node *root) {
-//   queue<pair<node *, int>> q;
-//   q.emplace(root, 1);
-//
-//   while (!q.empty()) {
-//     node *cur_node = q.front().first;
-//     int depth = q.front().second;
-//     q.pop();
-//
-//     if (cur_node->left == nullptr && cur_node->right == nullptr) {
-//       return depth;
-//     }
-//
-//     if (cur_node->left != nullptr) {
-//       q.emplace(cur_node->left, depth + 1);
-//     }
-//     if (cur_node->right != nullptr) {
-//       q.emplace(cur_node->right, depth + 1);
-//     }
-//   }
-//
-//   return 0;
-// }

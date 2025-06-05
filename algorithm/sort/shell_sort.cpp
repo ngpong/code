@@ -1,15 +1,15 @@
 #include "common.hpp"
 
-void solution_1(Array &datas) {
-  for (std::int32_t gs = datas.size() / 2; gs > 0; gs /= 2) {
-    for (std::int32_t i = gs; i < datas.size(); i++) {
-      std::int32_t key = datas[i];
+void solution_1(Array &arr, int32_t size) {
+  for (int32_t gs = size / 2; gs > 0; gs /= 2) {
+    for (int32_t i = gs; i < size; i++) {
+      int32_t k = arr[i];
 
-      std::int32_t j = i;
-      for (; j >= gs && key < datas[j - gs]; j -= gs) {
-        datas[j] = datas[j - gs];
+      int32_t j = i;
+      for (; j >= gs && k < arr[j - gs]; j -= gs) {
+        arr[j] = arr[j - gs];
       }
-      datas[j] = key;
+      arr[j] = k;
     }
   }
 }

@@ -1,144 +1,112 @@
 #include "common.hpp"
 
-void insertsort(Array &datas, std::int32_t low, std::int32_t high) {
-  for (std::int32_t i = low; i <= high; ++i) {
-    std::int32_t min = i;
-
-    for (std::int32_t j = i + 1; j <= high; ++j) {
-      if (datas[min] > datas[j]) {
-        min = j;
-      }
-    }
-
-    std::swap(datas[min], datas[i]);
-  }
-}
-
 // 双向快速排序
-void solution_1(Array &datas) {
-  auto quick_sort = make_y_combinator([&](auto quick_sort, std::int32_t low, std::int32_t high) -> void {
+void solution_1(Array &arr, int32_t size) {
+  make_y_combinator([&](auto qsort, int32_t low, int32_t high) -> void {
     if (low >= high) {
       return;
     }
 
-    std::int32_t p = datas[low];
+    int32_t pivot = arr[low];
 
-    std::int32_t lt = low, gt = high;
+    int32_t lt = low, gt = high;
     while (lt < gt) {
-      while (lt < gt && datas[gt] >= p) {
-        --gt;
+      while (lt < gt && arr[gt] >= pivot) {
+        gt--;
       }
-      while (lt < gt && datas[lt] <= p) {
-        ++lt;
+      while (lt < gt && arr[lt] <= pivot) {
+        lt++;
       }
       if (lt < gt) {
-        std::swap(datas[lt], datas[gt]);
+        std::swap(arr[lt], arr[gt]);
       }
     }
-    std::swap(datas[lt], datas[low]);
+    std::swap(arr[low], arr[lt]);
 
-    // datas[low...lt-1] <= datas[lt] <= datas[lt+1...high]
-
-    quick_sort(low, lt - 1);
-    quick_sort(lt + 1, high);
-  });
-
-  quick_sort(0, datas.size() - 1);
+    qsort(low, lt - 1);
+    qsort(lt + 1, high);
+  })(0, size - 1);
 }
 
 // 无递归快速排序
-void solution_2(Array &datas) {
-  auto partition = make_y_combinator([&](auto partition, std::int32_t low, std::int32_t high) -> std::int32_t {
-    std::int32_t p = datas[low];
+void solution_2(Array &arr, int32_t size) {
+  auto partition = [&](int32_t low, int32_t high) -> int32_t {
+    int32_t pivot = arr[low];
 
-    std::int32_t lt = low, gt = high;
+    int32_t lt = low, gt = high;
     while (lt < gt) {
-      while (lt < gt && datas[gt] >= p) {
-        --gt;
+      while (lt < gt && arr[gt] >= pivot) {
+        gt--;
       }
-      while (lt < gt && datas[lt] <= p) {
-        ++lt;
+      while (lt < gt && arr[lt] <= pivot) {
+        lt++;
       }
       if (lt < gt) {
-        std::swap(datas[lt], datas[gt]);
+        std::swap(arr[lt], arr[gt]);
       }
     }
-    std::swap(datas[lt], datas[low]);
+    std::swap(arr[lt], arr[low]);
 
     return lt;
-  });
+  };
 
-  auto quick_sort = make_y_combinator([&](auto quick_sort, std::int32_t low, std::int32_t high) {
-    std::stack<std::int32_t> sk;
+  std::stack<int32_t> s;
+  s.push(0);
+  s.push(size - 1);
 
-    if (low < high) {
-      sk.push(low);
-      sk.push(high);
+  while (!s.empty()) {
+    int32_t high = s.top(); s.pop();
+    int32_t low  = s.top(); s.pop();
+    if (low >= high) {
+      continue;
     }
 
-    while (!sk.empty()) {
-      std::int32_t _high = sk.top();
-      sk.pop();
-      std::int32_t _low = sk.top();
-      sk.pop();
-
-      std::int32_t mid = partition(_low, _high);
-
-      if (_low < mid - 1) {
-        sk.push(_low);
-        sk.push(mid - 1);
-      }
-
-      if (_high > mid + 1) {
-        sk.push(mid + 1);
-        sk.push(_high);
-      }
-    }
-  });
-
-  quick_sort(0, datas.size() - 1);
+    int32_t mid = partition(low, high);
+    s.push(low); s.push(mid - 1);
+    s.push(mid + 1); s.push(high);
+  }
 }
 
 // 单向快速排序
-void solution_3(Array &datas) {
-  auto quick_sort = make_y_combinator([&](auto quick_sort, std::int32_t low, std::int32_t high) -> void {
+void solution_3(Array &arr, int32_t size) {
+  auto quick_sort = make_y_combinator([&](auto quick_sort, int32_t low, int32_t high) -> void {
     if (low >= high) {
       return;
     }
 
-    std::int32_t p = datas[low];
+    int32_t p = arr[low];
 
-    std::int32_t lt = low, i = low + 1;
+    int32_t lt = low, i = low + 1;
     while (i <= high) {
-      if (datas[i] <= p) {
-        std::swap(datas[i], datas[++lt]);
+      if (arr[i] <= p) {
+        std::swap(arr[i], arr[++lt]);
       }
       ++i;
     }
-    std::swap(datas[low], datas[lt]);
+    std::swap(arr[low], arr[lt]);
 
     quick_sort(low, lt - 1);
     quick_sort(lt + 1, high);
   });
 
-  quick_sort(0, datas.size() - 1);
+  quick_sort(0, size - 1);
 }
 
 // 三向快速排序
-void solution_4(Array &datas) {
-  auto quick_sort = make_y_combinator([&](auto quick_sort, std::int32_t low, std::int32_t high) -> void {
+void solution_4(Array &arr, int32_t size) {
+  auto quick_sort = make_y_combinator([&](auto quick_sort, int32_t low, int32_t high) -> void {
     if (low >= high) {
       return;
     }
 
-    std::int32_t p = datas[low];
+    int32_t p = arr[low];
 
-    std::int32_t lt = low, gt = high + 1, i = low + 1;
+    int32_t lt = low, gt = high + 1, i = low + 1;
     while (i < gt) {
-      if (datas[i] < p) {
-        std::swap(datas[i++], datas[lt++]);
-      } else if (datas[i] > p) {
-        std::swap(datas[i], datas[--gt]);
+      if (arr[i] < p) {
+        std::swap(arr[i++], arr[lt++]);
+      } else if (arr[i] > p) {
+        std::swap(arr[i], arr[--gt]);
       } else {
         i++;
       }
@@ -148,155 +116,155 @@ void solution_4(Array &datas) {
     quick_sort(gt, high);
   });
 
-  quick_sort(0, datas.size() - 1);
+  quick_sort(0, size - 1);
 }
 
 // 双向快速排序（优化pivot的选择）
-void solution_5(Array &datas) {
+void solution_5(Array &arr, int32_t size) {
   // 该函数将序列分布为：mid...high...low
-  auto select_pivot = make_y_combinator([&](auto select_pivot, std::int32_t low, std::int32_t high) -> void {
-    std::int32_t mid = (low + high) / 2;
+  auto select_pivot = make_y_combinator([&](auto select_pivot, int32_t low, int32_t high) -> void {
+    int32_t mid = (low + high) / 2;
 
-    if (datas[mid] < datas[high]) {
-      std::swap(datas[mid], datas[high]);
+    if (arr[mid] < arr[high]) {
+      std::swap(arr[mid], arr[high]);
     }
 
-    if (datas[low] < datas[high]) {
-      std::swap(datas[low], datas[high]);
+    if (arr[low] < arr[high]) {
+      std::swap(arr[low], arr[high]);
     }
 
-    if (datas[mid] < datas[low]) {
-      std::swap(datas[mid], datas[low]);
+    if (arr[mid] < arr[low]) {
+      std::swap(arr[mid], arr[low]);
     }
   });
 
-  auto quick_sort = make_y_combinator([&](auto quick_sort, std::int32_t low, std::int32_t high) -> void {
+  auto quick_sort = make_y_combinator([&](auto quick_sort, int32_t low, int32_t high) -> void {
     if (low >= high) {
       return;
     }
 
     select_pivot(low, high);
 
-    std::int32_t p = datas[low];
+    int32_t p = arr[low];
 
-    std::int32_t lt = low, gt = high;
+    int32_t lt = low, gt = high;
     while (lt < gt) {
-      while (lt < gt && datas[gt] >= p) {
+      while (lt < gt && arr[gt] >= p) {
         --gt;
       }
-      while (lt < gt && datas[lt] <= p) {
+      while (lt < gt && arr[lt] <= p) {
         ++lt;
       }
       if (lt < gt) {
-        std::swap(datas[lt], datas[gt]);
+        std::swap(arr[lt], arr[gt]);
       }
     }
-    std::swap(datas[lt], datas[low]);
+    std::swap(arr[lt], arr[low]);
 
     quick_sort(low, lt - 1);
     quick_sort(lt + 1, high);
   });
 
-  quick_sort(0, datas.size() - 1);
+  quick_sort(0, size - 1);
 }
-void solution_6(Array &datas) {
-  auto select_pivot = make_y_combinator([&](auto select_pivot, std::int32_t low, std::int32_t high) -> void {
-  std::int32_t mid = (low + high) / 2;
-  
-  if (datas[high] < datas[low]) {
-    std::swap(datas[high], datas[low]);
-  }
-  
-  if (datas[high] < datas[mid]) {
-    std::swap(datas[high], datas[mid]);
-  }
-  
-  if (datas[high] < datas[mid]) {
-    std::swap(datas[mid], datas[high]);
-  }
+void solution_6(Array &arr, int32_t size) {
+  auto select_pivot = make_y_combinator([&](auto select_pivot, int32_t low, int32_t high) -> void {
+    int32_t mid = (low + high) / 2;
+
+    if (arr[high] < arr[low]) {
+      std::swap(arr[high], arr[low]);
+    }
+
+    if (arr[high] < arr[mid]) {
+      std::swap(arr[high], arr[mid]);
+    }
+
+    if (arr[high] < arr[mid]) {
+      std::swap(arr[mid], arr[high]);
+    }
   });
 
-  auto quick_sort = make_y_combinator([&](auto quick_sort, std::int32_t low, std::int32_t high) -> void {
+  auto quick_sort = make_y_combinator([&](auto quick_sort, int32_t low, int32_t high) -> void {
     if (low >= high) {
       return;
     }
 
     select_pivot(low, high);
 
-    std::int32_t p = datas[low];
+    int32_t p = arr[low];
 
-    std::int32_t lt = low, gt = high;
+    int32_t lt = low, gt = high;
     while (lt < gt) {
-      while (lt < gt && datas[gt] >= p) {
+      while (lt < gt && arr[gt] >= p) {
         --gt;
       }
-      while (lt < gt && datas[lt] <= p) {
+      while (lt < gt && arr[lt] <= p) {
         ++lt;
       }
       if (lt < gt) {
-        std::swap(datas[lt], datas[gt]);
+        std::swap(arr[lt], arr[gt]);
       }
     }
-    std::swap(datas[lt], datas[low]);
+    std::swap(arr[lt], arr[low]);
 
     quick_sort(low, lt - 1);
     quick_sort(lt + 1, high);
   });
 
-  quick_sort(0, datas.size() - 1);
+  quick_sort(0, size - 1);
 }
-void solution_7(Array &datas) {
-  auto fix_pivot = make_y_combinator([&](auto fix_pivot, std::int32_t low, std::int32_t high) -> void {
-    std::int32_t mid = (low + high) / 2;
+void solution_7(Array &arr, int32_t size) {
+  auto fix_pivot = make_y_combinator([&](auto fix_pivot, int32_t low, int32_t high) -> void {
+    int32_t mid = (low + high) / 2;
 
-    std::int32_t l = datas[low];
-    std::int32_t m = datas[mid];
-    std::int32_t r = datas[high];
+    int32_t l = arr[low];
+    int32_t m = arr[mid];
+    int32_t r = arr[high];
 
     if ((l <= m && m <= r) || (r <= m && m <= l)) {
-      std::swap(datas[low], datas[mid]);
+      std::swap(arr[low], arr[mid]);
     } else if ((l <= r && r <= m) || (m <= r && r <= l)) {
-      std::swap(datas[low], datas[high]);
+      std::swap(arr[low], arr[high]);
     }
   });
 
-  auto quick_sort = make_y_combinator([&](auto quick_sort, std::int32_t low, std::int32_t high) -> void {
+  auto quick_sort = make_y_combinator([&](auto quick_sort, int32_t low, int32_t high) -> void {
     if (low >= high) {
       return;
     }
 
     fix_pivot(low, high);
 
-    std::int32_t pivot = datas[low];
+    int32_t pivot = arr[low];
 
-    std::int32_t lt = low, gt = high;
+    int32_t lt = low, gt = high;
     while (lt < gt) {
-      while (lt < gt && datas[gt] >= pivot) {
+      while (lt < gt && arr[gt] >= pivot) {
         --gt;
       }
-      while (lt < gt && datas[lt] <= pivot) {
+      while (lt < gt && arr[lt] <= pivot) {
         ++lt;
       }
       if (lt < gt) {
-        std::swap(datas[lt], datas[gt]);
+        std::swap(arr[lt], arr[gt]);
       }
     }
-    std::swap(datas[low], datas[lt]);
+    std::swap(arr[low], arr[lt]);
 
     quick_sort(low, lt - 1);
     quick_sort(lt + 1, high);
   });
 
-  quick_sort(0, datas.size() - 1);
+  quick_sort(0, size - 1);
 }
 
-std::int32_t main(std::int32_t argc, char *argv[]) {
+int32_t main(int32_t argc, char *argv[]) {
   std::srand(std::time(NULL));
 
   solution_test({
-    // { solution_1, "solution_1" },
-    // { solution_2, "solution_2" },
-    // { solution_3, "solution_3" },
+    { solution_1, "双向分区快速排序" },
+    { solution_2, "递推快速排序" },
+    { solution_3, "单向分区快速排序" },
     // { solution_4, "solution_4" },
     // { solution_5, "solution_5" },
     // { solution_6, "solution_6" },
@@ -304,9 +272,9 @@ std::int32_t main(std::int32_t argc, char *argv[]) {
   });
 
   solution_benchmark({
-    // { solution_1, "solution_1" },
-    // { solution_2, "solution_2" },
-    // { solution_3, "solution_3" },
+    { solution_1, "双向分区快速排序" },
+    { solution_2, "递推快速排序" },
+    { solution_3, "单向分区快速排序" },
     // { solution_4, "solution_4" },
     // { solution_5, "solution_5" },
     // { solution_6, "solution_6" },

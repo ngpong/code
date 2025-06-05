@@ -41,7 +41,7 @@ ListNode *solutions(ListNode *list, std::int32_t k) {
     } else {            // 处理正常能够找到k个节点的情况
       auto [head, tail] = revert_list(s);
       tail->next = it;
-      wrap->next = head; 
+      wrap->next = head;
 
       wrap = tail;
     }

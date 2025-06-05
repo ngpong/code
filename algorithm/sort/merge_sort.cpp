@@ -1,53 +1,51 @@
 #include "common.hpp"
 
-void solution_1(Array &datas) {
-  auto merge_split = make_y_combinator([&] (auto merge_split, std::int32_t L, std::int32_t M, std::int32_t R) {
-    std::int32_t left_size = M - L;
-    std::int32_t left[left_size];
-    for (std::int32_t i = L; i < M; ++i) {
-      left[i - L] = datas[i];
+void solution_1(Array &arr, int32_t size) {
+  auto merge = [&](int32_t l, int32_t m, int32_t r) -> void {
+    int32_t lsize = m - l;
+    int32_t larr[lsize];
+    for (int32_t i = l; i < m; i++) {
+      larr[i - l] = arr[i];
     }
 
-    std::int32_t right_size = R - M + 1;
-    std::int32_t right[right_size];
-    for (std::int32_t i = M; i <= R; ++i) {
-      right[i - M] = datas[i];
+    int32_t rsize = r - m + 1;
+    int32_t rarr[rsize];
+    for (int32_t i = m; i <= r; i++) {
+      rarr[i - m] = arr[i];
     }
 
-    std::int32_t i = 0, j = 0, k = L;
-    while (i < left_size && j < right_size) {
-      if (left[i] < right[j]) {
-        datas[k++] = left[i++];
+    int32_t i = 0, j = 0;
+    int32_t k = l;
+    while (i < lsize && j < rsize) {
+      if (larr[i] < rarr[j]) {
+        arr[k++] = larr[i++];
       } else {
-        datas[k++] = right[j++];
+        arr[k++] = rarr[j++];
       }
     }
 
-    while (i < left_size) {
-      datas[k++] = left[i++];
+    while (i < lsize) {
+      arr[k++] = larr[i++];
     }
 
-    while (j < right_size) {
-      datas[k++] = right[j++];
+    while (j < rsize) {
+      arr[k++] = rarr[j++];
     }
-  });
+  };
 
-  auto merge_sort = make_y_combinator([&] (auto merge_sort, std::int32_t low, std::int32_t high) {
+  make_y_combinator([&](auto merge_sort, int32_t low, int32_t high) -> void {
     if (low == high) {
       return;
     }
 
-    std::int32_t mid = (low + high) / 2;
+    int32_t mid = (low + high) / 2;
     merge_sort(low, mid);
     merge_sort(mid + 1, high);
-
-    merge_split(low, mid + 1, high);
-  });
-
-  merge_sort(0, datas.size() - 1);
+    merge(low, mid + 1, high);
+  })(0, size - 1);
 }
 
-std::int32_t main (std::int32_t argc, char *argv[]) {
+int32_t main (int32_t argc, char *argv[]) {
   solution_test({
     { solution_1, "solution_1" },
   });

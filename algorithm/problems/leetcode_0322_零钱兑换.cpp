@@ -1,114 +1,73 @@
-#include <iostream>
-#include <stdlib.h>
-#include <algorithm>
-#include <limits.h>
-#include <time.h>
-#include <vector>
+#include "common.hpp"
 
 // 假设我有3种类型的硬币，分别为 2元、5元、7元，问: 最少使用多少个硬币可以拼出 27 元
 //
-// 分析得到最优子问题为: 
+// 分析得到最优子问题为:
 //  最少使用多少个硬币可以拼出 27 - a_k 元
 // 这里，a_k 则为所提供的三种类型的硬币中的一种，因为它仅能取这三种情况，那么当我们对该最优子问题进行划分，并取得最小值，则为所提供的公式:
 //  f(x) = min{ f(x - a_2) + 1, f(x - a_5) + 1, f(x - a_7) + 1 }
-// 在这里，+1 的目的是为了加上减去的 a_k 
+// 在这里，+1 的目的是为了加上减去的 a_k
 //
 // 代码实现中稍微优化了以下，即原题所提供的恒定的币种改为 k 种币种
 
-void print_res(int ret, clock_t t_start, clock_t t_end) {
-  if (ret != INT_MAX) {
-    std::cout << ret << std::endl;
-  } else {
-    std::cout << "not pair" << std::endl;
+// 穷举法
+int32_t solution1(int32_t amount, std::vector<int32_t> &coins) {
+  if (amount == 0) {
+    return 0;
   }
 
-  std::cout << t_end - t_start << std::endl;
-}
-
-// 暴力递归解法
-int coin_change_1_impl(int value, std::vector<int> &coins) {
-  if (value == 0) {
-    return value;
+  int32_t count = INT32_MAX;
+  for(auto &coin : coins) {
+    if (amount >= coin) {
+      int32_t opt = solution1(amount - coin, coins);
+      count = std::min(count, opt);
+    }
   }
 
-  int res = INT_MAX;
-  for (auto coin = coins.begin(); coin != coins.end(); ++coin) {
-    int opt = value >= *coin ? coin_change_1_impl(value - *coin, coins) : INT_MAX;
-    res = std::min(res, opt);
-  }
-
-  return res == INT_MAX ? INT_MAX : res + 1;
-}
-int coin_change_1(int value, std::vector<int> &coins) {
-  return coin_change_1_impl(value, coins);
+  return count != INT32_MAX ? count + 1 : INT32_MAX;
 }
 
 // 自顶向下记忆优化递归解法
-int coin_change_2_imp(int value, std::vector<int> &dp, std::vector<int> &coins) {
-  if (value == 0) {
-    return value;
-  }
-  if (dp[value] != INT_MAX) {
-    return dp[value];
+int32_t solution2(int32_t amount, std::vector<int32_t> &coins, std::map<int32_t, int32_t> &m) {
+  if (auto it = m.find(amount); it != m.end()) {
+    return it->second;
   }
 
-  int res = INT_MAX;
-  for (auto coin = coins.begin(); coin != coins.end(); ++coin) {
-    int opt = value >= *coin ? coin_change_2_imp(value - *coin, dp, coins) : INT_MAX;
-    res = std::min(res, opt);
+  if (amount == 0) {
+    return 0;
   }
 
-  dp[value] = res == INT_MAX ? INT_MAX : res + 1;
-  return dp[value];
-}
-int coin_change_2(int value, std::vector<int> &coins) {
-  std::vector<int> dp(value + 1, INT_MAX);
-  dp[0];
+  int32_t count = INT32_MAX;
+  for(auto &coin : coins) {
+    if (amount >= coin) {
+      int32_t opt = solution2(amount - coin, coins, m);
+      count = std::min(count, opt);
+    }
+  }
 
-  return coin_change_2_imp(value, dp, coins);
+  count = count != INT32_MAX ? count + 1 : INT32_MAX;
+  m[amount] = count;
+
+  return count;
 }
 
 // 自底向上动态递归解法
-int coin_change_3(int value, std::vector<int> &coins) {
-  std::vector<int> dp(value + 1, INT_MAX);
+int32_t solution3(int32_t amount, std::vector<int32_t> &coins) {
+  std::vector<int32_t> dp(amount + 1, INT32_MAX);
   dp[0] = 0;
 
-  for (int i = 1; i <= value; ++i) {
-    for (auto coin = coins.begin(); coin != coins.end(); ++coin) {
-      int coin_value = *coin;
-
-      if (i >= coin_value) {
-        int opt = dp[i - coin_value];
-        dp[i] = std::min(dp[i], opt == INT_MAX ? INT_MAX : opt + 1);
+  for (int32_t i = 1; i <= amount; i++) {
+    for(auto &coin : coins) {
+      if (coin <= i) {
+        int32_t opt = dp[i - coin];
+        dp[i] = std::min(dp[i], opt == INT32_MAX ? INT32_MAX : opt + 1);
       }
     }
   }
 
-  return dp[value];
+  return dp[amount];
 }
 
 int main(void) {
-  clock_t start,end;
-
-  int N = 50, ret = 0;
-
-  std::vector<int> coins = { 2, 5 ,7 };
-
-  start = clock();
-  ret = coin_change_1(N, coins);
-  end = clock();
-  print_res(ret, start, end);
-
-  start = clock();
-  ret = coin_change_2(N, coins);
-  end = clock();
-  print_res(ret, start, end);
-
-  start = clock();
-  ret = coin_change_3(N, coins);
-  end = clock();
-  print_res(ret, start, end);
-
-
-  return 1;
+  return EXIT_SUCCESS;
 }

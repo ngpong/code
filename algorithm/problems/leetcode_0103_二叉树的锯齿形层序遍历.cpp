@@ -3,40 +3,79 @@
 // 题目：
 // 给你二叉树的根节点 root ，返回其节点值的 锯齿形层序遍历 。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。
 
-std::vector<int> solutions(TreeNode *root) {
-  std::vector<int> ret;
+std::vector<int> solution1(TreeNode* root) {
+  std::vector<int32_t> ret;
 
-  std::queue<TreeNode *> qe;
-  qe.push(root);
+  std::vector<TreeNode *> nodes;
+  nodes.push_back(root);
 
-  bool reverise = false;
-  while (!qe.empty()) {
-    std::list<int> lst;
-    
-    // 操作本层所有的非空节点
-    for (int i = 0, size = qe.size(); i < size; ++i) {
-      TreeNode *node = qe.front(); qe.pop();
-      
-      // 如果需要反转，则执行头插；否则执行尾插
-      if (reverise) {
+  bool reverse = false;
+  while (!nodes.empty()) {
+    std::list<int32_t> lst;
+    std::vector<TreeNode *> temp;
+    for(auto &node : nodes) {
+      if (reverse) {
         lst.push_front(node->val);
       } else {
         lst.push_back(node->val);
       }
-      
-      // 继续遍历下一层
+
       if (node->left) {
-        qe.push(node->left);
+        temp.push_back(node->left);
       }
       if (node->right) {
-        qe.push(node->right);
+        temp.push_back(node->right);
       }
     }
-    // 将本轮（层）所需遍历的数据插入到返回集
+    nodes.swap(temp);
     std::copy(std::begin(lst), std::end(lst), std::back_inserter(ret));
-    
-    // 每一层结束后调转一次反转关系
-    reverise = !reverise;
+
+    reverse = !reverse;
+  }
+
+  return ret;
+}
+
+std::vector<std::vector<int>> solution2(TreeNode *root) {
+  std::vector<std::vector<int>> ret;
+
+  std::list<TreeNode *> lst;
+  lst.push_back(root);
+
+  bool reverse = false;
+  while (!lst.empty()) {
+    std::vector<int32_t> v;
+
+    int32_t sz = lst.size();
+    while (sz > 0) {
+      TreeNode *node;
+      if (reverse) {
+        node = lst.back();
+        lst.pop_back();
+        if (node->right) {
+          lst.push_front(node->right);
+        }
+        if (node->left) {
+          lst.push_front(node->left);
+        }
+      } else {
+        node = lst.front();
+        lst.pop_front();
+        if (node->left) {
+          lst.push_back(node->left);
+        }
+        if (node->right) {
+          lst.push_back(node->right);
+        }
+      }
+
+      v.push_back(node->val);
+
+      sz--;
+    }
+
+    ret.emplace_back(std::move(v));
+    reverse = !reverse;
   }
 
   return ret;
@@ -46,7 +85,8 @@ int main(int argc, char *argv[]) {
   TreeNode *bt = get_binary_tree(10);
   std::cout << bt << std::endl;
 
-  std::cout << solutions(bt) << std::endl;
+  std::cout << solution1(bt) << std::endl;
+  std::cout << solution2(bt) << std::endl;
 
   return 0;
 }

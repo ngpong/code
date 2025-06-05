@@ -1,31 +1,31 @@
 #include "common.hpp"
 
 // 原始实现
-void solution_1(Array &datas) {
-  for (std::size_t i = 0; i < datas.size(); ++i) {
-    for (std::size_t j = 0; j < datas.size() - i - 1; ++j) {
-      if (datas[j] > datas[j + 1]) {
-        std::swap(datas[j], datas[j + 1]);
+void solution_1(Array &arr, int32_t size) {
+  for (int32_t i = 0; i < size; i++) {
+    for (int32_t j = 0; j < size - i - 1; j++) {
+      if (arr[j] > arr[j + 1]) {
+        std::swap(arr[j], arr[j + 1]);
       }
     }
   }
 }
 
 // 鸡尾酒算法优化
-void solution_2(Array &datas) {
-  std::int32_t left = 0, right = datas.size() - 1;
+void solution_2(Array &arr, int32_t size) {
+  int32_t left = 0, right = size - 1;
 
   while (left < right) {
-    for (size_t i = left; i < right; i++) {
-      if (datas[i] > datas[i + 1]) {
-        std::swap(datas[i], datas[i + 1]);
+    for (int32_t i = left; i < right; i++) {
+      if (arr[i] > arr[i + 1]) {
+        std::swap(arr[i], arr[i + 1]);
       }
     }
     right--;
 
-    for (size_t i = right; i > left; i--) {
-      if (datas[i - 1] > datas[i]) {
-        std::swap(datas[i], datas[i - 1]);
+    for (int32_t i = right; i > left; i--) {
+      if (arr[i] < arr[i - 1]) {
+        std::swap(arr[i], arr[i - 1]);
       }
     }
     left++;
@@ -33,13 +33,13 @@ void solution_2(Array &datas) {
 }
 
 // 提前结束优化：避免没必要的迭代
-void solution_3(Array &datas) {
-  for (size_t i = 0; i < datas.size(); i++) {
+void solution_3(Array &arr, int32_t size) {
+  for (int32_t i = 0; i < size; i++) {
     bool is_swapped = false;
 
-    for (size_t j = 0; j < datas.size() - i - 1; j++) {
-      if (datas[j] > datas[j + 1]) {
-        std::swap(datas[j], datas[j + 1]);
+    for (int32_t j = 0; j < size - i - 1; j++) {
+      if (arr[j] > arr[j + 1]) {
+        std::swap(arr[j], arr[j + 1]);
         is_swapped = true;
       }
     }
@@ -50,7 +50,7 @@ void solution_3(Array &datas) {
   }
 }
 
-int main(void) {
+int32_t main(void) {
   solution_test({
     { solution_1, "solution_1" },
     { solution_2, "solution_2" },

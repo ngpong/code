@@ -17,17 +17,16 @@ TreeNode* solution(std::vector<int>& preorder, std::vector<int>& inorder) {
     return nullptr;
   }
 
-  TreeNode* root = new TreeNode(preorder[0]);
+  TreeNode *root = new TreeNode(preorder[0]);
 
-  int i = std::find(inorder.begin(), inorder.end(), root->val) - inorder.begin();
+  int32_t i = std::find(inorder.begin(), inorder.end(), root->val) - inorder.begin();
+  std::vector<int32_t> inorder_l(inorder.begin(), inorder.begin() + i);
+  std::vector<int32_t> inorder_r(inorder.begin() + 1 + i, inorder.end());
+  std::vector<int32_t> preorder_l(preorder.begin() + 1, preorder.begin() + 1 + i);
+  std::vector<int32_t> preorder_r(preorder.begin() + 1 + i, preorder.end());
 
-  std::vector<int> inorder_left(inorder.begin(), inorder.begin() + i);
-  std::vector<int> inorder_right(inorder.begin() + i + 1, inorder.end());
-  std::vector<int> preorder_left(preorder.begin() + 1, preorder.begin() + 1 + i);
-  std::vector<int> preorder_right(preorder.begin() + i + 1, preorder.end());
-
-  root->left  = solution(preorder_left, inorder_left);
-  root->right = solution(preorder_right, inorder_right);
+  root->left = solution(preorder_l, inorder_l);
+  root->right = solution(preorder_r, inorder_r);
 
   return root;
 }

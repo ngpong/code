@@ -4,34 +4,36 @@
 //
 // 该算法参考归并排序在合并 left 和 right 时的操作即可
 
-std::vector<std::int32_t> solution(std::vector<std::int32_t>& left, std::int32_t m, std::vector<std::int32_t>& right, std::int32_t n) {
-  std::vector<std::int32_t> ret = {};
+template <typename T>
+T solution(T& larr, T& rarr) {
+  T merged = {};
 
-  std::int32_t i = 0, j = 0;
-  while (i < m && j < n) {
-    if (left[i] < right[j]) {
-      ret.push_back(left[i++]);
+  int32_t lsize = larr.size(), i = 0;
+  int32_t rsize = rarr.size(), j = 0;
+  while (i < lsize && j < rsize) {
+    if (larr[i] < rarr[j]) {
+      merged.emplace_back(larr[i++]);
     } else {
-      ret.push_back(right[j++]);
+      merged.emplace_back(rarr[j++]);
     }
   }
 
-  while (i < m) {
-    ret.push_back(left[i++]);
+  while (i < lsize) {
+    merged.emplace_back(larr[i++]);
   }
 
-  while (j < n) {
-    ret.push_back(right[j++]);
+  while (j < rsize) {
+    merged.emplace_back(rarr[j++]);
   }
 
-  return ret;
+  return merged;
 }
 
 std::int32_t main(std::int32_t argc, char* argv[]) {
   std::vector<int> left  = { 1, 2, 3 };
   std::vector<int> right = { 2, 5, 6 };
 
-  std::cout << solution(left, left.size(), right, right.size()) << std::endl;
+  std::cout << solution(left, right) << std::endl;
 
   return 0;
 }

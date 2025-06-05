@@ -1,5 +1,6 @@
 #include <benchmark/benchmark.h>
 #include <iostream>
+#include <cstdint>
 
 static std::int64_t factorial(std::int64_t n) {
   if (n < 0) {

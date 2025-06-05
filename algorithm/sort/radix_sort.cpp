@@ -1,50 +1,53 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
+#include "common.hpp"
 
-#define PRINT(arr)                                       \
-  for (int i = 0; i < sizeof(arr) / sizeof(*arr); ++i) { \
-    printf("%d\n", arr[i]);                              \
-  }
+// 基数排序
 
-static int arrary[] = { 3, 44, 38, 5, 47, 15, 36, 26, 27, 2, 46, 4, 19, 50, 48 };
-static int len = sizeof(arrary) / sizeof(*arrary);
+void solution_1(Array &arr, int32_t size) {
+  auto digit = [&](int32_t num, int32_t exp) -> int32_t {
+    return (num / exp) % 10;
+  };
 
-int main(int argc, char *argv[]) {
-  int max_val = arrary[0];
-  for (int i = 1; i < len; ++i) {
-    if (arrary[i] > max_val) {
-      max_val = arrary[i];
+  auto radix_count = [&](int32_t exp) -> void {
+    Array sorter(size, 0x0);
+    Array bucket(10, 0x0);
+
+    for (int32_t i = 0; i < size; i++) {
+      bucket[digit(arr[i], exp)]++;
     }
-  }
 
-  int bucket[10] = { 0 };
-  int *sorted_arr = malloc(sizeof(int) * len); bzero(sorted_arr, sizeof(int) * len);
-
-  int base = 1;
-  while (max_val / base > 0) {
-    for (int i = 0; i < len; ++i) {
-      bucket[arrary[i] / base % 10] += 1;
-    }
-    for (int i = 1; i < 10; ++i) {
+    for (int32_t i = 1; i < 10; i++) {
       bucket[i] += bucket[i - 1];
     }
-    for (int i = 0; i < len; ++i) {
-      bucket[arrary[i] / base % 10]--;
-      sorted_arr[bucket[arrary[i] / base % 10]] = arrary[i];
+
+    for (int32_t i = size - 1; i >= 0; i--) {
+      sorter[--bucket[digit(arr[i], exp)]] = arr[i];
     }
 
-    memcpy(arrary, sorted_arr, sizeof(int) * len);
-    bzero(sorted_arr, sizeof(int) * len);
+    for (int32_t i = 0; i < size; i++) {
+      arr[i] = sorter[i];
+    }
+  };
 
-    base *= 10;
+  int32_t max = arr[0];
+  for (int32_t i = 1; i < size; i++) {
+    if (arr[i] > max) {
+      max = arr[i];
+    }
   }
-  printf("1\n");
-  free(sorted_arr);
-  printf("2\n");
 
-  PRINT(arrary);
+  for (int32_t exp = 1; max / exp > 0; exp *= 10) {
+    radix_count(exp);
+  }
+}
 
-  return EXIT_SUCCESS;
+int32_t main(int32_t argc, char *argv[]) {
+  solution_test({
+    { solution_1, "solution_1" },
+  });
+
+  solution_benchmark({
+    { solution_1, "solution_1" },
+  });
+
+  return 0;
 }

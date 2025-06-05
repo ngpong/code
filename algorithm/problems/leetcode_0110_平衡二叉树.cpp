@@ -9,25 +9,45 @@
 
 bool solution(TreeNode *root) {
   bool is_balance = true;
-
-  auto _solution = make_y_combinator([&](auto _solution, TreeNode *node) -> int {
+  make_y_combinator([&](auto f, TreeNode *node) -> int {
     if (!node || !is_balance) {
       return 0;
     }
 
-    int l_deep = _solution(node->left);
-    int r_deep = _solution(node->right);
+    int l_deep = f(node->left);
+    int r_deep = f(node->right);
 
     if (l_deep - r_deep >= 2 || r_deep - l_deep >= 2) {
       is_balance = false;
     }
 
     return std::max(l_deep, r_deep) + 1;
-  });
-
-  _solution(root);
+  })(root);
 
   return is_balance;
+}
+
+std::tuple<bool, int32_t> solution2(TreeNode *node) {
+  if (!node) {
+    return std::make_tuple(true, 0);
+  }
+
+  auto tl = solution2(node->left);
+  auto tr = solution2(node->right);
+
+  if (!std::get<0>(tl) || !std::get<0>(tr)) {
+    return std::make_tuple(false, 0);
+  }
+
+  int32_t lheight = ++std::get<1>(tl);
+  int32_t rheight = ++std::get<1>(tr);
+
+  int32_t diff = std::abs(lheight - rheight);
+  if (diff > 1) {
+    return std::make_tuple(false, 0);
+  } else {
+    return std::make_tuple(true, std::max(lheight, rheight));
+  }
 }
 
 int main(int argc, char *argv[]) {

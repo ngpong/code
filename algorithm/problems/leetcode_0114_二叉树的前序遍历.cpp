@@ -1,18 +1,19 @@
 #include "common.hpp"
 
 // 题目：给你二叉树的根节点 root ，返回它节点值的 前序 遍历。
+// 先访问根节点，然后访问左子树，最后访问右子树。
 
-void solutions_1(TreeNode *root) {
+void solution1(TreeNode *root) {
   if (!root) {
     return;
   }
 
   std::cout << root->val << std::endl;
-  solutions_1(root->left);
-  solutions_1(root->right);
+  solution1(root->left);
+  solution1(root->right);
 }
 
-void solutions_2(TreeNode *root) {
+void solution2(TreeNode *root) {
   std::stack<TreeNode *> s;
 
   while (!s.empty() || root) {
@@ -32,9 +33,9 @@ std::int32_t main (std::int32_t argc, char *argv[]) {
   TreeNode *bt = get_binary_tree(10);
   std::cout << bt << std::endl;
 
-  solutions_1(bt);
+  solution1(bt);
   std::cout << "=====================" << std::endl;
-  solutions_2(bt);
+  solution2(bt);
 
   return 0;
 }

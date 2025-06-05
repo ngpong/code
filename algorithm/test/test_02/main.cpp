@@ -3,21 +3,21 @@
 #include <ctime>
 #include <iostream>
 
-static constexpr std::int32_t array_size = 20;
+static constexpr int32_t array_size = 20;
 
-using Array = std::array<std::int32_t, array_size>;
+using Array = std::array<int32_t, array_size>;
 
 Array init() {
   return { 7, 1, 7, 2, 4, 7, 8, 10, 1, 2, 15, 2, 2, 3, 1, 12, 11, 7, 13, 14 };
 }
 
-void quick_sort_1(Array &arr, std::int32_t low, std::int32_t high) {
+void quick_sort_1(Array &arr, int32_t low, int32_t high) {
   if (low >= high)
     return;
 
-  std::int32_t pivot = arr[low];
+  int32_t pivot = arr[low];
 
-  std::int32_t i = low, lt = low, gt = high + 1;
+  int32_t i = low, lt = low, gt = high + 1;
 
   while (i < gt) {
     if (arr[i] < pivot) {
@@ -33,16 +33,16 @@ void quick_sort_1(Array &arr, std::int32_t low, std::int32_t high) {
   quick_sort_1(arr, gt, high);
 }
 
-void quick_sort_2(Array &arr, const std::int32_t low, const std::int32_t high) {
+void quick_sort_2(Array &arr, const int32_t low, const int32_t high) {
   if (low >= high) {
     return;
   }
 
-  std::int32_t pivot = arr[low];
+  int32_t pivot = arr[low];
 
-  std::int32_t lt = low;
-  std::int32_t gt = high + 1;
-  std::int32_t i  = low + 1;
+  int32_t lt = low;
+  int32_t gt = high + 1;
+  int32_t i  = low + 1;
 
   while (i < gt) {
     if (arr[i] < pivot) {
@@ -63,14 +63,14 @@ void quick_sort_2(Array &arr, const std::int32_t low, const std::int32_t high) {
   quick_sort_2(arr, lt + 1, high);
 }
 
-std::int32_t _find_topk_1(Array &datas, std::int32_t kth, std::int32_t low, std::int32_t high) {
+int32_t _find_topk_1(Array &datas, int32_t kth, int32_t low, int32_t high) {
   if (low >= high) {
     return datas[low];
   }
 
-  std::int32_t p = datas[low];
+  int32_t p = datas[low];
 
-  std::int32_t lt = low, gt = high + 1, i = low + 1;
+  int32_t lt = low, gt = high + 1, i = low + 1;
   while (i < gt) {
     if (datas[i] < p) {
       std::swap(datas[i++], datas[lt++]);
@@ -89,18 +89,18 @@ std::int32_t _find_topk_1(Array &datas, std::int32_t kth, std::int32_t low, std:
     return p;
   }
 }
-void find_topk_1(Array &datas, std::int32_t k) {
+void find_topk_1(Array &datas, int32_t k) {
   _find_topk_1(datas, k, 0, datas.size() - 1);
 }
 
-std::int32_t _find_topk_2(Array &datas, std::int32_t k, std::int32_t low, std::int32_t high) {
+int32_t _find_topk_2(Array &datas, int32_t k, int32_t low, int32_t high) {
   if (low >= high) {
     return datas[low];
   }
 
-  std::int32_t p = datas[low];
+  int32_t p = datas[low];
 
-  std::int32_t lt = low, gt = high;
+  int32_t lt = low, gt = high;
   while (lt < gt) {
     while (lt < gt && datas[gt] >= p) {
       --gt;
@@ -122,11 +122,11 @@ std::int32_t _find_topk_2(Array &datas, std::int32_t k, std::int32_t low, std::i
     return _find_topk_2(datas, k, lt + 1, high);
   }
 }
-void find_topk_2(Array &datas, std::int32_t k) {
+void find_topk_2(Array &datas, int32_t k) {
   _find_topk_2(datas, k, 0, datas.size() - 1);
 }
 
-std::int32_t main(std::int32_t argc, char *argv[]) {
+int32_t main(int32_t argc, char *argv[]) {
   Array arr = init();
 
   {

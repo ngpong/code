@@ -1,31 +1,31 @@
 #include "common.hpp"
 
-void solution_1(Array &datas) {
-  for (size_t i = 1; i < datas.size(); i++) {
-    std::int32_t key = datas[i];
+void solution_1(Array &arr, int32_t size) {
+  for (int32_t i = 1; i < size; i++) {
+    int32_t k = arr[i];
 
-    std::int32_t j = i - 1;
-    for (; j >= 0 && datas[j] > key; --j) {
-      datas[j + 1] = datas[j];
+    int32_t j = i - 1;
+    for (; j >= 0 && k < arr[j]; j--) {
+      arr[j + 1] = arr[j];
     }
-    datas[j + 1] = key;
+    arr[j + 1] = k;
   }
 }
 
-void solution_2(Array &datas) {
+void solution_2(Array &arr, int32_t size) {
   auto insert_sort = make_y_combinator(
-    [&](auto insert_sort, std::int32_t i = 1) -> void {
-      if (i >= datas.size()) {
+    [&](auto insert_sort, int32_t i = 1) -> void {
+      if (i >= size) {
         return;
       }
 
-      std::int32_t key = datas[i];
+      int32_t key = arr[i];
 
-      std::int32_t j = i - 1;
-      for (; j >= 0 && key < datas[j]; --j) {
-        datas[j + 1] = datas[j];
+      int32_t j = i - 1;
+      for (; j >= 0 && key < arr[j]; --j) {
+        arr[j + 1] = arr[j];
       }
-      datas[j + 1] = key;
+      arr[j + 1] = key;
 
       insert_sort(++i);
     });
@@ -33,46 +33,46 @@ void solution_2(Array &datas) {
   insert_sort();
 }
 
-std::int32_t binarySearch(Array &datas, std::int32_t target, std::int32_t low, std::int32_t high) {
+int32_t binarySearch(Array &arr, int32_t k, int32_t low, int32_t high) {
   if (high <= low)
-    return (target > datas[low]) ? (low + 1) : low;
+    return (k > arr[low]) ? (low + 1) : low;
 
-  int mid = (low + high) / 2;
+  int32_t mid = (low + high) / 2;
 
-  if (target == datas[mid])
+  if (k == arr[mid])
     return mid + 1;
-  if (target > datas[mid])
-    return binarySearch(datas, target, mid + 1, high);
+  if (k > arr[mid])
+    return binarySearch(arr, k, mid + 1, high);
 
-  return binarySearch(datas, target, low, mid - 1);
+  return binarySearch(arr, k, low, mid - 1);
 }
 
-void solution_3(Array &datas) {
-  for (std::int32_t i = 1; i < datas.size(); ++i) {
-    std::int32_t key = datas[i];
+void solution_3(Array &arr, int32_t size) {
+  for (int32_t i = 1; i < size; ++i) {
+    int32_t k = arr[i];
 
-    std::int32_t j = i - 1;
+    int32_t j = i - 1;
 
-    std::int32_t loc = binarySearch(datas, key, 0, j);
+    int32_t loc = binarySearch(arr, k, 0, j);
     while (j >= loc) {
-      datas[j + 1] = datas[j];
+      arr[j + 1] = arr[j];
       --j;
     }
-    datas[j + 1] = key;
+    arr[j + 1] = k;
   }
 }
 
 int main(void) {
   solution_test({
-    { solution_1, "solution_1" },
-    { solution_2, "solution_2" },
-    { solution_3, "solution_3" },
+    { solution_1, "普通实现" },
+    { solution_2, "递归实现" },
+    { solution_3, "二分查找优化" },
   });
 
   solution_benchmark({
-    { solution_1, "solution_1" },
-    { solution_2, "solution_2" },
-    { solution_3, "solution_3" },
+    { solution_1, "普通实现" },
+    { solution_2, "递归实现" },
+    { solution_3, "二分查找优化" },
   });
 
   return EXIT_SUCCESS;
