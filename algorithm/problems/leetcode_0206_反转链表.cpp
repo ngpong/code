@@ -5,19 +5,21 @@
 
 // 双链表实现
 ListNode *solutions_1(ListNode *head) {
-  ListNode *new_list = nullptr;
+  ListNode newlist;
+  ListNode *dummy = &newlist;
 
-  while (head) {
-    ListNode *next = head->next; // 暂存 next 指针
+  ListNode *node = head;
+  while (node) {
+    ListNode *nextnode = node->next;
 
-    ListNode *tmp = head;     // 获取链表的头节点
-    tmp->next     = new_list; // 提取链表的头节点并拼接到新链表
-    new_list      = tmp;
+    ListNode *l = dummy->next; // 提取 dummy 剩余的部分
+    dummy->next = node;        // 设置头节点
+    dummy->next->next = l;     // 链接头节点与剩余的部分
 
-    head = next;
+    node = nextnode;
   }
 
-  return new_list;
+  return dummy->next;
 }
 
 // 栈实现
@@ -50,13 +52,4 @@ ListNode *solutions_2(ListNode *head) {
   }
 
   return first;
-}
-
-std::int32_t main(std::int32_t argc, char *argv[]) {
-  ListNode *node = get_list(10);
-
-  std::cout << solutions_1(node) << std::endl;
-  // solutions_2(node)->Foreach();
-
-  return 0;
 }

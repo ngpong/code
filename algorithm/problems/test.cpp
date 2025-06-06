@@ -1,82 +1,47 @@
 #include "common.hpp"
 
-ListNode *merge(ListNode *left, ListNode *right) {
-  ListNode dummy;
-  ListNode *t = &dummy;
-
-  while (left && right) {
-    if (left->val < right->val) {
-      t->next = left;
-      left = left->next;
-    } else {
-      t->next = right;
-      right = right->next;
-    }
-    t = t->next;
-  }
-
-  if (left) {
-    t->next = left;
-  } else {
-    t->next = right;
-  }
-
-  return dummy.next;
-}
 ListNode *solution1(ListNode *head) {
-  if (!head || !head->next) {
-    return head;
+  ListNode newlist;
+  ListNode *dummy = &newlist;
+
+  ListNode *node = head;
+  while (node) {
+    ListNode *nextnode = node->next;
+
+    ListNode *l = dummy->next;
+    dummy->next = node;
+    dummy->next->next = l;
+
+    node = nextnode;
   }
 
-  ListNode *slow = head;
-  ListNode *fast = head->next;
-  while (fast && fast->next) {
-    slow = slow->next;
-    fast = fast->next->next;
-  }
-
-  ListNode *left = head;
-  ListNode *right = slow->next;
-  slow->next = nullptr;
-
-  left = solution1(left);
-  right = solution1(right);
-  return merge(left, right);
+  return dummy->next;
 }
 
 ListNode *solution2(ListNode *head) {
-  int32_t min = head->val;
-  int32_t max = head->val;
-  for (auto node = head; node; node = node->next) {
-    if (node->val < min) {
-      min = node->val;
-    }
-    if (node->val > max) {
-      max = node->val;
-    }
-  }
-  int32_t size = std::abs(max - min + 1);
+  std::stack<ListNode *> s;
 
-  Array bucket(size, 0x0);
-  for (auto node = head; node; node = node->next) {
-    bucket[node->val - min]++;
+  for (ListNode *node = head; node; node = node->next) {
+    s.push(node);
   }
 
-  ListNode *node = head;
-  for (int32_t i = 0; i < size; i++) {
-    for (int32_t j = 0; j < bucket[i]; j++) {
-      node->val = i + min;
-      node = node->next;
-    }
-  }
+  ListNode newlst;
+  ListNode *dummy = &newlst;
+  while (!s.empty()) {
+    ListNode *node = s.top();
+    s.pop();
 
-  return head;
+    dummy->next = node;
+    dummy = dummy->next;
+  }
+  dummy->next = nullptr; // 设置最后的尾节点的 nil 防止形成环
+
+  return newlst.next;
 }
 
 int32_t main (int32_t argc, char *argv[]) {
-  ListNode *list = get_list_desc();
+  ListNode *list = get_list(4);
   std::cout << list << std::endl;
   std::cout << solution2(list) << std::endl;
-
   return 0;
 }
