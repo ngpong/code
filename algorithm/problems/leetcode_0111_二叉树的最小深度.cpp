@@ -7,10 +7,9 @@
 
 #include "common.hpp"
 
-int solution1(TreeNode *root) {
-  int min = 0;
-
-  auto _solution = make_y_combinator([&](auto _solution, TreeNode *node, int depth = 0) -> void {
+int32_t solution1(TreeNode *root) {
+  int32_t min = 0;
+  make_y_combinator([&](auto _solution, TreeNode *node, int32_t depth = 0) -> void {
     if (!node) {
       return;
     }
@@ -23,22 +22,20 @@ int solution1(TreeNode *root) {
       _solution(node->left, depth);
       _solution(node->right, depth);
     }
-  });
-
-  _solution(root);
+  })(root);
 
   return min;
 }
 
-int solution2(TreeNode *root) {
-  int min = 0;
+int32_t solution2(TreeNode *root) {
+  int32_t min = 0;
 
   if (!root) {
     return min;
   }
 
-  int dp = 0;
-  std::stack<std::pair<TreeNode *, int>> s;
+  int32_t dp = 0;
+  std::stack<std::pair<TreeNode *, int32_t>> s;
 
   for (TreeNode *it = root; it || !s.empty();) {
     while (it) {
@@ -68,43 +65,7 @@ int solution2(TreeNode *root) {
   return min;
 }
 
-int solution3(TreeNode *root) {
-  if (!root) {
-    return 0;
-  }
-
-  std::list<TreeNode *> lst;
-  lst.push_back(root);
-
-  int32_t depth = 0;
-  while (!lst.empty()) {
-    depth++;
-
-    int32_t sz = lst.size();
-    while (sz > 0) {
-      TreeNode *node = lst.front();
-      lst.pop_front();
-
-      if (!node->left && !node->right) {
-        return depth;
-      }
-
-      if (node->left) {
-        lst.push_back(node->left);
-      }
-
-      if (node->right) {
-        lst.push_back(node->right);
-      }
-
-      sz--;
-    }
-  }
-
-  return depth;
-}
-
-int main(int argc, char *argv[]) {
+int32_t main(int32_t argc, char *argv[]) {
   TreeNode *bt = get_binary_tree();
   std::cout << bt << std::endl;
 

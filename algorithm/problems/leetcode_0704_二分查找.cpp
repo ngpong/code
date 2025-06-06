@@ -1,14 +1,14 @@
 #include "common.hpp"
 
-std::int32_t solution(std::vector<std::int32_t> &nums, std::int32_t target) {
-  std::int32_t lt = 0;
-  std::int32_t gt = nums.size() - 1;
+int32_t solution(std::vector<int32_t> &nums, int32_t target) {
+  int32_t lt = 0;
+  int32_t gt = nums.size() - 1;
 
   while (lt <= gt) {
-    std::int32_t mid = (lt + gt) / 2;
+    int32_t mid = (lt + gt) / 2;
 
     if (target < nums[mid]) {
-      gt = mid - 1; 
+      gt = mid - 1;
     } else if (target > nums[mid]) {
       lt = mid + 1;
     } else {
@@ -19,8 +19,8 @@ std::int32_t solution(std::vector<std::int32_t> &nums, std::int32_t target) {
   return -1;
 }
 
-std::int32_t main (std::int32_t argc, char *argv[]) {
-  std::vector<std::int32_t> nums = { 1, 3, 6, 8, 8, 9, 10, 21, 33 };
+int32_t main (int32_t argc, char *argv[]) {
+  std::vector<int32_t> nums = { 1, 3, 6, 8, 8, 9, 10, 21, 33 };
 
   std::cout << solution(nums, 1) << std::endl;
   std::cout << solution(nums, 2) << std::endl;

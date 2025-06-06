@@ -38,8 +38,9 @@ int32_t fibonacci3(int32_t n) {
 }
 
 int main(void) {
-  foo_recursion();
-  foo_unrecursion();
+  fibonacci3(10);
+  fibonacci2(10);
+  fibonacci1(10);
 
   return EXIT_SUCCESS;
 }

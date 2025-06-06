@@ -2,37 +2,37 @@
 
 class LRUCache {
   using List = std::list<std::pair<int, int>>;
+  using Hash = std::unordered_map<int32_t, List::iterator>;
 
-private:
-  int capacity;
-  List datas;
-  std::unordered_map<int, List::iterator> hash;
+  int32_t m_capacity;
+  List m_list;
+  Hash m_hash;
 
 public:
-  LRUCache(int _capacity) {
-    capacity = _capacity;
-  }
+  LRUCache(int32_t capacity): m_capacity(capacity) {};
 
-  int get(int key) {
-    if (auto it = hash.find(key); it != hash.end()) {
-      datas.splice(datas.begin(), datas, it->second);
-      return it->second->second;
+  int32_t get(int32_t k) {
+    if (auto hash_it = m_hash.find(k); hash_it != m_hash.end()) {
+      auto list_it = hash_it->second;
+      m_list.splice(m_list.begin(), m_list, list_it);
+      return list_it->second;
     } else {
       return -1;
     }
   }
 
-  void put(int key, int value) {
-    if (auto it = hash.find(key); it != hash.end()) {
-      it->second->second = value;
-      datas.splice(datas.begin(), datas, it->second);
+  void put(int32_t k, int32_t v) {
+    if (auto hash_it = m_hash.find(k); hash_it != m_hash.end()) {
+      auto list_it = hash_it->second;
+      list_it->second = v;
+      m_list.splice(m_list.begin(), m_list, list_it);
     } else {
-      datas.emplace_front(key, value);
-      hash.emplace(key, datas.begin());
+      m_list.emplace_front(k, v);
+      m_hash.emplace(k, m_list.begin());
 
-      if (datas.size() > capacity) {
-        hash.erase(datas.back().first);
-        datas.pop_back();
+      if (m_list.size() > m_capacity) {
+        m_hash.erase(m_list.back().first);
+        m_list.pop_back();
       }
     }
   }
