@@ -283,14 +283,12 @@ void solution_merge_sort(Array &arr, int32_t size) {
       }
     }
 
-    if (i < lsize) {
-      while (i < lsize) {
-        arr[k++] = larr[i++];
-      }
-    } else {
-      while (j < rsize) {
-        arr[k++] = rarr[j++];
-      }
+    while (i < lsize) {
+      arr[k++] = larr[i++];
+    }
+
+    while (j < rsize) {
+      arr[k++] = rarr[j++];
     }
   };
 
