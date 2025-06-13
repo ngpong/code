@@ -1,47 +1,44 @@
 #include "common.hpp"
 
-ListNode *solution1(ListNode *head) {
-  ListNode newlist;
-  ListNode *dummy = &newlist;
+struct MinheapCMP {
+  bool operator()(int x, int y) {
+    return x > y;
+  }
+};
+using Maxheap = std::priority_queue<int>;
+using Minheap = std::priority_queue<int, std::vector<int>, MinheapCMP>;
 
-  ListNode *node = head;
-  while (node) {
-    ListNode *nextnode = node->next;
+int main(int argc, char *argv[]) {
+  std::vector<int> m_datas = {  2, 4, 3, 1, 7, 9, 5, 8, 6, 10, 0, 13 };
 
-    ListNode *l = dummy->next;
-    dummy->next = node;
-    dummy->next->next = l;
+  Maxheap max_heap;
+  Minheap min_heap;
 
-    node = nextnode;
+  for (int i = 0; i < m_datas.size(); ++i) {
+    // 平均分配元素
+    // 将基数下标的元素纳入最小堆
+    // 将复数下标的元素纳入最大堆
+    //
+    // 由于下标是从 0 开始的，所以最小堆的 size 是大与最小堆的
+    if ((i & 1) == 1) {
+      min_heap.push(m_datas[i]);
+    } else {
+      max_heap.push(m_datas[i]);
+    }
   }
 
-  return dummy->next;
-}
-
-ListNode *solution2(ListNode *head) {
-  std::stack<ListNode *> s;
-
-  for (ListNode *node = head; node; node = node->next) {
-    s.push(node);
+  for (int min = min_heap.top(), max = max_heap.top(); max > min; min = min_heap.top(), max = max_heap.top()) {
+    min_heap.push(max);
+    max_heap.pop();
+    max_heap.push(min);
+    min_heap.pop();
   }
 
-  ListNode newlst;
-  ListNode *dummy = &newlst;
-  while (!s.empty()) {
-    ListNode *node = s.top();
-    s.pop();
-
-    dummy->next = node;
-    dummy = dummy->next;
+  if (max_heap.size() == min_heap.size()) {
+    std::cout << (max_heap.top() + min_heap.top()) / 2 << std::endl;
+  } else {
+    std::cout << max_heap.top() << std::endl;
   }
-  dummy->next = nullptr; // 设置最后的尾节点的 nil 防止形成环
 
-  return newlst.next;
-}
-
-int32_t main (int32_t argc, char *argv[]) {
-  ListNode *list = get_list(4);
-  std::cout << list << std::endl;
-  std::cout << solution2(list) << std::endl;
   return 0;
 }

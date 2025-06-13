@@ -12,6 +12,7 @@
 #include <vector>
 #include <stack>
 #include <list>
+#include <fstream>
 #include <benchmark/benchmark.h>
 
 #define MAX_TEST_CASE 1000
@@ -117,6 +118,27 @@ std::tuple<Array, Array, std::string> get_wave(int size) {
   }
 
   return mm[size];
+}
+
+std::tuple<Array, Array, std::string> get_duplicates2() {
+  static std::map<int32_t, std::tuple<Array, Array, std::string>> mm;
+
+  if (!mm.count(1)) {
+    std::vector<int32_t> nums = {};
+    std::ifstream f("nums");
+    int32_t num;
+    while (f >> num) {
+      nums.push_back(num);
+    }
+    f.close();
+
+    std::vector<int32_t> sortnums = nums;
+    std::sort(sortnums.begin(), sortnums.end());
+
+    mm.emplace(1, std::make_tuple<Array, Array, std::string>(std::move(nums), std::move(sortnums), __FUNCTION__));
+  }
+
+  return mm[1];
 }
 
 // 大量重复元素的数组
@@ -241,8 +263,9 @@ void solution_test(std::vector<std::pair<Solution_F, std::string>> regs) {
     auto t2 = get_sorted_asc(MAX_TEST_CASE);
     auto t3 = get_sorted_desc(MAX_TEST_CASE);
     auto t4 = get_duplicates(MAX_TEST_CASE);
-    auto t5 = get_wave(MAX_TEST_CASE);
-    auto t6 = get_partially(MAX_TEST_CASE);
+    auto t5 = get_duplicates2();
+    auto t6 = get_wave(MAX_TEST_CASE);
+    auto t7 = get_partially(MAX_TEST_CASE);
 
     __solution_test(t1);
     __solution_test(t2);
@@ -250,6 +273,7 @@ void solution_test(std::vector<std::pair<Solution_F, std::string>> regs) {
     __solution_test(t4);
     __solution_test(t5);
     __solution_test(t6);
+    __solution_test(t7);
   }
 
   std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
@@ -260,18 +284,12 @@ void solution_benchmark(std::vector<std::pair<Solution_F, std::string>> regs) {
 
   benchmark::Initialize(nullptr, nullptr);
 
-  Array arr_random = std::get<0>(get_random(MAX_TEST_CASE));
-  Array arr_sorted_asc = std::get<0>(get_sorted_asc(MAX_TEST_CASE));
-  Array arr_sorted_desc = std::get<0>(get_sorted_desc(MAX_TEST_CASE));
-  Array arr_duplicates = std::get<0>(get_duplicates(MAX_TEST_CASE));
-  Array arr_wave = std::get<0>(get_wave(MAX_TEST_CASE));
-  Array arr_partially = std::get<0>(get_partially(MAX_TEST_CASE));
-
   for(auto& t : {
     get_random(MAX_TEST_CASE),
     get_sorted_asc(MAX_TEST_CASE),
     get_sorted_desc(MAX_TEST_CASE),
     get_duplicates(MAX_TEST_CASE),
+    get_duplicates2(),
     get_wave(MAX_TEST_CASE),
     get_partially(MAX_TEST_CASE)
   }) {

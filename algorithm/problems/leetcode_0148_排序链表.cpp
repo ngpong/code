@@ -75,14 +75,3 @@ ListNode *solution2(ListNode *head) {
   right = solution2(right);
   return merge(left, right);
 }
-
-int32_t main(int32_t argc, char *argv[]) {
-  ListNode *list = get_list_desc();
-  std::cout << list << std::endl;
-
-  solution2(list);
-
-  std::cout << list << std::endl;
-
-  return 0;
-}

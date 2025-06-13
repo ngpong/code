@@ -3,7 +3,7 @@
 // ====================================================================================================================
 // 题目：
 // 给定整数数组 nums 和整数 k，请返回数组中第 k 个最大的元素。
-// 
+//
 // 请注意，你需要找的是数组排序后的第 k 个最大的元素，而不是第 k 个不同的元素。
 // ====================================================================================================================
 
@@ -17,11 +17,11 @@
 // 要知道，我们只需要找到kth的位置，故在下一次分区时可以忽略掉本身就不存在kth的那个区间。为此，我们可以在开始下一
 // 次分区前pivot下标距离k的相对位置以选择左分区还是右分区。同样的，当pivot的下标与k一致时，就可认为此时找到了kth元
 // 素。
-// 
+//
 // - 复杂度分析：
 // 1. 由于并没有开放额外的空间，故我们通常说空间复杂度为O(1)
 // 2. 由于快速选择只需要递归一边的数组，时间复杂度小于快速排序，期望时间复杂度为 O(n)，最坏情况下的时间复杂度为 O(n^2)
-std::int32_t solutions_1(Array datas, std::int32_t k) {
+std::int32_t solution1(Array datas, std::int32_t k) {
   auto fix_pivot = make_y_combinator([&](auto fix_pivot, std::int32_t low, std::int32_t high) -> void {
     std::int32_t mid = (low + high) / 2;
 
@@ -73,6 +73,47 @@ std::int32_t solutions_1(Array datas, std::int32_t k) {
   return datas[k - 1];
 }
 
+std::int32_t solution2(std::vector<int32_t> &nums, std::int32_t k) {
+  auto partition = [&](int32_t low, int32_t high) -> std::pair<int32_t, int32_t> {
+    if (low >= high) {
+      return { low, high };
+    }
+
+    int32_t pivot = nums[low];
+
+    int32_t lt = low, gt = high + 1, i = low + 1;
+    while (i < gt) {
+      if (nums[i] < pivot) {
+        std::swap(nums[i++], nums[lt++]);
+      } else if (nums[i] > pivot) {
+        std::swap(nums[i], nums[--gt]);
+      } else {
+        i++;
+      }
+    }
+
+    return { lt, gt };
+  };
+
+  int32_t n = nums.size();
+  k = n - k;
+
+  int32_t low = 0, high = n - 1;
+  while (low <= high) {
+    auto [lt, gt] = partition(low, high);
+    if (k == lt) {
+      return nums[k];
+    } else if (k >= lt && k < gt) {
+      return nums[k];
+    } else if (k < lt) {
+      high = lt - 1;
+    } else {
+      low = gt;
+    }
+  }
+  return -1;
+}
+
 // 小顶堆
 //
 // - 算法与思想：
@@ -87,63 +128,40 @@ std::int32_t solutions_1(Array datas, std::int32_t k) {
 // - 复杂度分析：
 // 1. 由于并没有开放额外的空间，即便有也仅需要关注长度为k的区间。故我们通常说空间复杂度为O(1)
 // 2. 与堆排序分析一致：建堆需要O(n)的时间；单次heapify需要O(logk)的时间并且需要经历n-k次迭代；故我们说时间复杂度为O(nlogk)
-std::int32_t solutions_2(Array datas, std::int32_t k) {
-  auto heapify = make_y_combinator([&](auto heapify, std::int32_t n, std::int32_t i) -> void {
-    std::int32_t child_l = i * 2 + 1;
-    std::int32_t child_r = i * 2 + 2;
+std::int32_t solution3(Array nums, std::int32_t k) {
+  auto heapify = [&](int32_t n, int32_t i) -> void {
+    while (true) {
+      int32_t l = i * 2 + 1;
+      int32_t r = i * 2 + 2;
 
-    std::int32_t smaller = i;
-    if (child_l <= n && datas[smaller] > datas[child_l]) {
-      smaller = child_l;
+      int32_t smaller = i;
+      if (l <= n && nums[smaller] > nums[l]) {
+        smaller = l;
+      }
+      if (r <= n && nums[smaller] > nums[r]) {
+        smaller = r;
+      }
+
+      if (smaller == i) break;
+
+      std::swap(nums[i], nums[smaller]);
+      i = smaller;
     }
-    if (child_r <= n && datas[smaller] > datas[child_r]) {
-      smaller = child_r;
+  };
+
+  int32_t n = k - 1;
+  for (int32_t i = (n - 1) / 2; i >= 0; i--) {
+    heapify(n, i);
+  }
+  for (int32_t i = k; i < nums.size(); i++) {
+    if (nums[i] > nums[0]) {
+      nums[0] = nums[i];
+      heapify(n, 0);
     }
-
-    if (i != smaller) {
-      std::swap(datas[smaller], datas[i]);
-      heapify(n, smaller);
-    }
-  });
-
-  std::int32_t lst_idx = k - 1;
-
-  for (std::int32_t parent = (lst_idx - 1) / 2; parent >= 0; --parent) {
-    heapify(lst_idx, parent);
   }
 
-  for (std::int32_t i = k; i < datas.size(); ++i) {
-    if (datas[i] > datas[0]) {
-      datas[0] = datas[i];
-      heapify(lst_idx, 0);
-    }
-  }
-
-  return datas[0];
+  return nums[0];
 }
 
 // 采用数据分片的大小，将数据再分片，然后分布式的进行运算，比如分成 10 份，每一份再执行一次 topk 运算，最后返回十份的 topk
 // 数据，在这个数据的基础上再进行 topk 即可
-
-std::int32_t main(std::int32_t argc, char* argv[]) {
-  std::vector<std::int32_t> datas = { 4, 1, -1, 2, -1, 2, 6, 3, 7, 0, 5, 4 }; // 7, 6, 5, 4, 4, 3, 2, 2, 1, 0, -1, -1
-  std::int32_t k                  = 5;
-
-  // solutions_1(datas, k);
-  std::cout << solutions_2(datas, 1) << std::endl;
-  std::cout << solutions_2(datas, 2) << std::endl;
-  std::cout << solutions_2(datas, 3) << std::endl;
-  std::cout << solutions_2(datas, 4) << std::endl;
-  std::cout << solutions_2(datas, 5) << std::endl;
-  std::cout << solutions_2(datas, 6) << std::endl;
-  std::cout << solutions_2(datas, 7) << std::endl;
-  std::cout << solutions_2(datas, 8) << std::endl;
-  std::cout << solutions_2(datas, 9) << std::endl;
-  std::cout << solutions_2(datas, 10) << std::endl;
-  std::cout << solutions_2(datas, 11) << std::endl;
-  std::cout << solutions_2(datas, 12) << std::endl;
-  std::cout << solutions_2(datas, 13) << std::endl;
-  std::cout << solutions_2(datas, datas.size() - 1) << std::endl;
-
-  return 0;
-}

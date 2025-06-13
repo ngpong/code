@@ -35,6 +35,25 @@ void solution2(TreeNode *root) {
   solution2(root->right);
 }
 
+void solution3(TreeNode *root) {
+  std::stack<std::tuple<int32_t, TreeNode *>> s;
+  s.push({ 0, root });
+
+  while (!s.empty()) {
+    auto [count, node] = s.top(); s.pop();
+    if (!node) {
+      continue;
+    }
+    if (count == 0) {
+      s.push({ 0, node->right });
+      s.push({ 1, node });
+      s.push({ 0, node->left });
+    } else {
+      std::cout << node->val << std::endl;
+    }
+  }
+}
+
 int main(void) {
   TreeNode *bt = get_binary_tree(10);
   std::cout << bt << std::endl;

@@ -1,47 +1,33 @@
-#include <iostream>
-#include <stack>
+#include "common.hpp"
 
-class queue {
-  std::stack<int> a, b;
+class MyQueue {
+  std::stack<int32_t> m_input;
+  std::stack<int32_t> m_output;
 
 public:
-  void push(int val) {
-    a.push(val);
+  void push(int32_t x) {
+    m_input.push(x);
   }
 
-  int pop() {
-    if (!b.empty()) {
-      int ret = b.top();
-      b.pop();
-      return ret;
-    }
-    if (a.empty()) {
-      return -1;
-    }
+  int32_t pop() {
+    int32_t val = peek();
+    m_output.pop();
+    return val;
+  }
 
-    while (!a.empty()) {
-      b.push(a.top()); a.pop();
+  int32_t peek() {
+    // 转化为 output 栈
+    if (m_output.empty()) {
+      while (!m_input.empty()) {
+        int32_t val = m_input.top();
+        m_input.pop();
+        m_output.push(val);
+      }
     }
+    return m_output.top();
+  }
 
-    int ret = b.top();
-    b.pop();
-    return ret;
+  bool empty() {
+    return m_input.empty() && m_output.empty();
   }
 };
-
-int main(void) {
-  queue q;
-  q.push(1);
-  q.push(2);
-  q.push(3);
-  q.push(4);
-  q.push(5);
-  q.push(6);
-  q.push(7);
-
-  for (int i = 0; i < 7; ++i) {
-    std::cout << q.pop() << std::endl;
-  }
-
-  return EXIT_SUCCESS;
-}

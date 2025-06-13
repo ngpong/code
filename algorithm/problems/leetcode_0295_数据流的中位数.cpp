@@ -1,6 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <queue>
+#include "common.hpp"
 
 // 题目: 在一个无序数组中寻找中位数
 //
@@ -10,43 +8,72 @@
 // 如何平均分配元素?
 //  * 遍历数组，将基数下标的元素纳入最小堆，将复数下标的元素纳入最大堆
 
-struct greater {
-  bool operator()(int x, int y) {
-    return x > y;
-  }
-};
+class MedianFinder {
+  std::priority_queue<int, std::vector<int>, std::less<int>> m_maxheap;
+  std::priority_queue<int, std::vector<int>, std::greater<int>> m_minheap;
 
-int main(void) {
-  std::vector<int> unorder_arr = {  2, 4, 3, 1, 7, 9, 5, 8, 6, 10, 0, 13 };
-
-  std::priority_queue<int> max_heap;
-  std::priority_queue<int, std::vector<int>, greater> min_heap;
-
-  for (int i = 0; i < unorder_arr.size(); ++i) {
-    // 平均分配元素
-    // 将基数下标的元素纳入最小堆
-    // 将复数下标的元素纳入最大堆
-    //
-    // 由于下标是从 0 开始的，所以最小堆的 size 是大与最小堆的
-    if ((i & 1) == 1) {
-      min_heap.push(unorder_arr[i]);
+public:
+  void addNum(int num) {
+    // 平均分配元素，使小顶堆和大顶堆的增长趋同
+    if (m_maxheap.size() == m_minheap.size()) {
+      m_maxheap.push(num);
     } else {
-      max_heap.push(unorder_arr[i]);
+      m_minheap.push(num);
     }
-    if (min_heap.empty() || max_heap.empty()) continue;
+
+    if (m_maxheap.empty() || m_minheap.empty()) {
+      return;
+    }
 
     // 交换大小堆顶种的内容
+    //
     // 使最小堆中装载最大堆的最大
     // 使最大堆中装载最小堆的最小
     //
     // 简而言之，就是使最小堆中的数据都比最大堆中的大
-    min_heap.push(max_heap.top());
-    max_heap.pop();
-    max_heap.push(min_heap.top());
-    min_heap.pop();
+    int min = m_minheap.top(), max = m_maxheap.top();
+    if (min < max) {
+      m_minheap.push(max);
+      m_maxheap.pop();
+      m_maxheap.push(min);
+      m_minheap.pop();
+    }
   }
 
-  std::cout << min_heap.top() << std::endl;
+  double findMedian() {
+    if (m_maxheap.size() == m_minheap.size()) {
+      // 当大小顶堆的长度相同时，证明数组的长度是偶数，此时并不存在中间值，需要取
+      // 边界的两个值之和除以 2
+      return (double)(m_maxheap.top() + m_minheap.top()) / 2;
+    } else {
+      // 数组的长度是奇数，存在中间值
+      return m_maxheap.top();
+    }
+  }
+};
+
+
+int main(void) {
+  std::vector<int> m_datas = {  2, 4, 3, 1, 7, 9, 5, 8, 6, 10, 0, 13 };
+
+  while (!min_heap.empty() && !max_heap.empty()) {
+    int min = min_heap.top(), max = max_heap.top();
+    if (max > min) {
+      min_heap.push(max);
+      max_heap.pop();
+      max_heap.push(min);
+      min_heap.pop();
+      min = min_heap.top(), max = max_heap.top();
+    } else {
+      break;
+    }
+  }
+
+  if (max_heap.size() == min_heap.size()) {
+    std::cout << (max_heap.top() + min_heap.top()) / 2 << std::endl;
+  } else {
+    std::cout << max_heap.top() << std::endl;
+  }
 
   return EXIT_SUCCESS;
 }

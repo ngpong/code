@@ -25,6 +25,9 @@ If:
     /usr/local/include/.*
   ]
 CompileFlags:
-  Add: -ferror-limit=0
+  Add: [
+    -ferror-limit=0,
+    -std=c++23
+  ]
 Diagnostics:
   Suppress: '*'

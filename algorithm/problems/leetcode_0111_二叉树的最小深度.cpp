@@ -9,7 +9,7 @@
 
 int32_t solution1(TreeNode *root) {
   int32_t min = 0;
-  make_y_combinator([&](auto _solution, TreeNode *node, int32_t depth = 0) -> void {
+  [&](this const auto &self, TreeNode *node, int32_t depth = 0) -> void {
     if (!node) {
       return;
     }
@@ -19,10 +19,10 @@ int32_t solution1(TreeNode *root) {
     if (!node->left && !node->right) {
       min = !min ? depth : std::min(depth, min);
     } else {
-      _solution(node->left, depth);
-      _solution(node->right, depth);
+      self(node->left, depth);
+      self(node->right, depth);
     }
-  })(root);
+  }(root);
 
   return min;
 }

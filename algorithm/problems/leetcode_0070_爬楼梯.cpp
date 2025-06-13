@@ -63,13 +63,3 @@ int32_t solution3(int32_t n) {
 
   return dp[1];
 }
-
-int32_t main(void) {
-  std::map<int32_t, int32_t> m;
-
-  solution1(40);
-  solution2(40, m);
-  solution3(40);
-
-  return EXIT_SUCCESS;
-}

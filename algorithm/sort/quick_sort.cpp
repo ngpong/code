@@ -69,27 +69,25 @@ void solution_2(Array &arr, int32_t size) {
 
 // 单向快速排序
 void solution_3(Array &arr, int32_t size) {
-  auto quick_sort = make_y_combinator([&](auto quick_sort, int32_t low, int32_t high) -> void {
+  [&](this const auto &qsort, int32_t low, int32_t high) -> void {
     if (low >= high) {
       return;
     }
 
-    int32_t p = arr[low];
+    int32_t pivot = arr[low];
 
     int32_t lt = low, i = low + 1;
     while (i <= high) {
-      if (arr[i] <= p) {
+      if (arr[i] <= pivot) {
         std::swap(arr[i], arr[++lt]);
       }
       ++i;
     }
     std::swap(arr[low], arr[lt]);
 
-    quick_sort(low, lt - 1);
-    quick_sort(lt + 1, high);
-  });
-
-  quick_sort(0, size - 1);
+    qsort(low, lt - 1);
+    qsort(lt + 1, high);
+  }(0, size - 1);
 }
 
 // 三向快速排序

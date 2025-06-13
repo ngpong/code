@@ -226,15 +226,46 @@ void solution_quicksort_2way(Array &arr, int32_t size) {
         std::swap(arr[lt], arr[gt]);
       }
     }
-    std::swap(arr[lt], arr[low]);
+    std::swap(arr[low], arr[lt]);
 
     qsort(low, lt - 1);
     qsort(lt + 1, high);
   })(0, size - 1);
 }
 
+void solution_quicksort_2way_2(Array &arr, int32_t size) {
+  make_y_combinator([&](auto qsort, int32_t low, int32_t high) -> void {
+    if (low >= high) {
+      return;
+    }
+
+    int32_t pivot = arr[low];
+
+    int32_t lt = low + 1, gt = high;
+    while (true) {
+      while (lt <= gt && pivot > arr[lt]) {
+        ++lt;
+      }
+      while (lt <= gt && pivot < arr[gt]) {
+        --gt;
+      }
+      if (lt >= gt) {
+        break;
+      }
+
+      std::swap(arr[lt], arr[gt]);
+      lt++;
+      gt--;
+    }
+    std::swap(arr[gt], arr[low]);
+
+    qsort(low, gt - 1);
+    qsort(gt + 1, high);
+  })(0, size - 1);
+}
+
 void solution_quicksort_3way(Array &arr, int32_t size) {
-  auto quick_sort = make_y_combinator([&](auto quick_sort, int32_t low, int32_t high) {
+  [&](this const auto &qsort, int32_t low, int32_t high) {
     if (low >= high) {
       return;
     }
@@ -252,11 +283,9 @@ void solution_quicksort_3way(Array &arr, int32_t size) {
       }
     }
 
-    quick_sort(low, lt - 1);
-    quick_sort(gt, high);
-  });
-
-  quick_sort(0, size - 1);
+    qsort(low, lt - 1);
+    qsort(gt, high);
+  }(0, size - 1);
 }
 
 void solution_merge_sort(Array &arr, int32_t size) {
@@ -344,32 +373,33 @@ void solution_radix_sort(Array &arr, int32_t size) {
 }
 
 int32_t main(void) {
-  solution_test({
-    { solution_radix_sort,             "solution_radix_sort"             },
-    { solution_merge_sort,             "solution_merge_sort"             },
-    // { solution_quicksort_normal,       "solution_quicksort_normal"       },
-    // { solution_quicksort_nonrecursive, "solution_quicksort_nonrecursive" },
-    { solution_quicksort_2way,         "solution_quicksort_2way"         },
-    // { solution_quicksort_3way,         "solution_quicksort_3way"         },
-    { solution_heap_sort,              "solution_heap_sort"              },
-    { solution_counting_sort,          "solution_counting_sort"          },
-    { solution_bucket_sort,            "solution_bucket_sort"            },
-    { solution_shell_sort,             "solution_shell_sort"             },
-    { solution_insert_sort,            "solution_insert_sort"            },
-    { solution_selection_sort,         "solution_selection_sort"         },
-    { solution_bubble_sort,            "solution_bubble_sort"            },
-  });
+  // solution_test({
+  //   // { solution_radix_sort,             "solution_radix_sort"             },
+  //   { solution_merge_sort,             "solution_merge_sort"             },
+  //   // { solution_quicksort_normal,       "solution_quicksort_normal"       },
+  //   // { solution_quicksort_nonrecursive, "solution_quicksort_nonrecursive" },
+  //   { solution_quicksort_2way,         "solution_quicksort_2way"         },
+  //   // { solution_quicksort_3way,         "solution_quicksort_3way"         },
+  //   { solution_heap_sort,              "solution_heap_sort"              },
+  //   // { solution_counting_sort,          "solution_counting_sort"          },
+  //   // { solution_bucket_sort,            "solution_bucket_sort"            },
+  //   { solution_shell_sort,             "solution_shell_sort"             },
+  //   { solution_insert_sort,            "solution_insert_sort"            },
+  //   { solution_selection_sort,         "solution_selection_sort"         },
+  //   { solution_bubble_sort,            "solution_bubble_sort"            },
+  // });
 
   solution_benchmark({
-    { solution_radix_sort,             "solution_radix_sort"             },
+    // { solution_radix_sort,             "solution_radix_sort"             },
     { solution_merge_sort,             "solution_merge_sort"             },
     // { solution_quicksort_normal,       "solution_quicksort_normal"       },
     // { solution_quicksort_nonrecursive, "solution_quicksort_nonrecursive" },
     { solution_quicksort_2way,         "solution_quicksort_2way"         },
-    // { solution_quicksort_3way,         "solution_quicksort_3way"         },
+    { solution_quicksort_2way_2,       "solution_quicksort_2way_2"         },
+    { solution_quicksort_3way,         "solution_quicksort_3way"         },
     { solution_heap_sort,              "solution_heap_sort"              },
-    { solution_counting_sort,          "solution_counting_sort"          },
-    { solution_bucket_sort,            "solution_bucket_sort"            },
+    // { solution_counting_sort,          "solution_counting_sort"          },
+    // { solution_bucket_sort,            "solution_bucket_sort"            },
     { solution_shell_sort,             "solution_shell_sort"             },
     { solution_insert_sort,            "solution_insert_sort"            },
     { solution_selection_sort,         "solution_selection_sort"         },

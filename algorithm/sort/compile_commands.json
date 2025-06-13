@@ -9,9 +9,9 @@
       "main",
       "test.cpp"
     ],
-    "directory": "/home/ngpong/code/algorithm/problems",
-    "file": "/home/ngpong/code/algorithm/problems/test.cpp",
-    "output": "/home/ngpong/code/algorithm/problems/main"
+    "directory": "/home/ngpong/code/algorithm/sort",
+    "file": "/home/ngpong/code/algorithm/sort/test.cpp",
+    "output": "/home/ngpong/code/algorithm/sort/main"
   },
   {
     "arguments": [
@@ -45,8 +45,8 @@
       "-debug-info-kind=constructor",
       "-dwarf-version=5",
       "-debugger-tuning=gdb",
-      "-fdebug-compilation-dir=/home/ngpong/code/algorithm/problems",
-      "-fcoverage-compilation-dir=/home/ngpong/code/algorithm/problems",
+      "-fdebug-compilation-dir=/home/ngpong/code/algorithm/sort",
+      "-fcoverage-compilation-dir=/home/ngpong/code/algorithm/sort",
       "-resource-dir",
       "/home/linuxbrew/.linuxbrew/Cellar/llvm/20.1.6/lib/clang/20",
       "-internal-isystem",
@@ -82,11 +82,11 @@
       "-x",
       "c++",
       "-o",
-      "/tmp/test-b5df0d.o",
+      "/tmp/test-54ed63.o",
       "test.cpp"
     ],
-    "directory": "/home/ngpong/code/algorithm/problems",
-    "file": "/home/ngpong/code/algorithm/problems/test.cpp",
-    "output": "/tmp/test-b5df0d.o"
+    "directory": "/home/ngpong/code/algorithm/sort",
+    "file": "/home/ngpong/code/algorithm/sort/test.cpp",
+    "output": "/tmp/test-54ed63.o"
   }
 ]

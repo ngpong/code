@@ -1,12 +1,10 @@
 #include <iostream>
 #include <stack>
 
-using namespace std;
-
 // 题目: 设计一个能够返回当前栈中所有元素最小值的栈，要求时间复杂度和空间复杂度都为 O(1)
 
 class min_stack {
-  stack<int> data;
+  std::stack<int> m_stack;
 
   int get_min(int val) {
     return val & 0xFFFF0000 >> 16;
@@ -22,31 +20,26 @@ class min_stack {
 
 public:
   void push(int val) {
-    if (data.empty()) {
-      data.push(set_num(val, val));
-      data.push(val);
+    if (m_stack.empty()) {
+      m_stack.push(set_num(val, val));
+      m_stack.push(val);
     }
 
-    int min_val = get_min(data.top());
+    int min_val = get_min(m_stack.top());
     if (val < min_val) {
       min_val = val;
     }
 
-    data.push(set_num(val, min_val));
+    m_stack.push(set_num(val, min_val));
   }
 
   int pop() {
-    int ret = data.top();
-    data.pop();
+    int ret = m_stack.top();
+    m_stack.pop();
     return ret;
   }
 
   int min() {
-    return data.top() >> 16;
+    return m_stack.top() >> 16;
   }
 };
-
-int main(void) {
-
-  return EXIT_SUCCESS;
-}
