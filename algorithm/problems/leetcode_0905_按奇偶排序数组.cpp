@@ -18,20 +18,20 @@ using namespace std;
 // 就证明在执行交换前，首尾指针都属于奇数，那么这时候我们让尾指针往下走，继续
 // 判断
 
-vector<int> event_left_odd_right(vector<int> &arr) {
-  if (arr.size() == 0) return arr;
+std::vector<int> event_left_odd_right(std::vector<int> &nums) {
+  if (nums.size() == 0) return nums;
 
   int i = 0;
-  int j = arr.size() - 1;
+  int j = nums.size() - 1;
   while (i < j) {
-    while (arr[i] % 2 != 0) {
-      SWAP(arr[i], arr[j]);
+    while (nums[i] % 2 != 0) {
+      SWAP(nums[i], nums[j]);
       j--;
     }
     i++;
   }
 
-  return arr;
+  return nums;
 }
 
 int main(void) {
