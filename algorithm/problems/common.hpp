@@ -179,6 +179,17 @@ ListNode *get_list_desc(int32_t begin = 10, int32_t end = -2) {
   }
 }
 
+ListNode *get_list(std::vector<int> nums) {
+  ListNode list;
+  ListNode *dummy = &list;
+  for (auto &num : nums) {
+    dummy->next = new ListNode(num);
+    dummy = dummy->next;
+  }
+
+  return list.next;
+}
+
 ListNode *get_list(int32_t end = 10, int32_t idx = 0) {
   if (idx > end) {
     return nullptr;

@@ -1,6 +1,6 @@
 #include "common.hpp"
 
-TreeNode* solution(TreeNode *root) {
+TreeNode *solution(TreeNode *root) {
   if (!root) {
     return root;
   }
@@ -33,14 +33,4 @@ TreeNode* solution(TreeNode *root) {
   }
 
   return root;
-}
-
-int main(int argc, char *argv[]) {
-  TreeNode *root = new TreeNode(3);
-  root->left = new TreeNode(9);
-  root->right = new TreeNode(20);
-  root->right->left = new TreeNode(15);
-  root->right->right = new TreeNode(7);
-
-  solution(root);
 }
