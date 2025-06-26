@@ -36,18 +36,23 @@ void solution2(TreeNode *root) {
 }
 
 void solution3(TreeNode *root) {
-  std::stack<std::tuple<int32_t, TreeNode *>> s;
-  s.push({ 0, root });
+  enum class Color: char {
+    White = 0,
+    Black = 1,
+  };
+
+  std::stack<std::tuple<Color, TreeNode *>> s;
+  s.push({ Color::White, root });
 
   while (!s.empty()) {
-    auto [count, node] = s.top(); s.pop();
+    auto [c, node] = s.top(); s.pop();
     if (!node) {
       continue;
     }
-    if (count == 0) {
-      s.push({ 0, node->right });
-      s.push({ 1, node });
-      s.push({ 0, node->left });
+    if (c == Color::White) {
+      s.push({ Color::White, node->right });
+      s.push({ Color::Black, node });
+      s.push({ Color::White, node->left });
     } else {
       std::cout << node->val << std::endl;
     }

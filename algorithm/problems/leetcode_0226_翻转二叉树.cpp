@@ -34,3 +34,17 @@ TreeNode *solution(TreeNode *root) {
 
   return root;
 }
+
+TreeNode *solution2(TreeNode *root) {
+  if (!root) {
+    return root;
+  }
+
+  TreeNode *left  = solution2(root->left);
+  TreeNode *right = solution2(root->right);
+
+  root->left = right;
+  root->right = left;
+
+  return root;
+}

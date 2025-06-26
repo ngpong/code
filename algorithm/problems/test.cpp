@@ -1,46 +1,21 @@
 #include "common.hpp"
 
-TreeNode* solution(TreeNode *root) {
-  if (!root) {
-    return root;
+ListNode *solution(ListNode *head) {
+
+
+  ListNode *nodei = head, *nodej = head->next;
+  while (nodej) {
   }
-
-  std::queue<TreeNode *> q;
-  q.push(root);
-
-  while (!q.empty()) {
-    int n = q.size();
-    while (n > 0) {
-      TreeNode *node = q.front();
-      q.pop();
-
-      TreeNode *left = node->left;
-      TreeNode *right = node->right;
-
-      node->right = left;
-      node->left = right;
-
-      if (left) {
-        q.push(left);
-      }
-
-      if (right) {
-        q.push(right);
-      }
-
-      n--;
-    }
-  }
-
-  return root;
 }
 
-int main(int argc, char *argv[]) {
-  TreeNode *root = new TreeNode(3);
-  root->left = new TreeNode(9);
-  root->right = new TreeNode(20);
-  root->right->left = new TreeNode(15);
-  root->right->right = new TreeNode(7);
+int32_t main(int32_t argc, char *argv[]) {
+  ListNode *head = new ListNode(9);
+  head->next = new ListNode(9);
+  head->next->next = new ListNode(9);
+  head->next->next->next = new ListNode(9);
+  head->next->next->next->next = new ListNode(9);
+  head->next->next->next->next->next = new ListNode(9);
+  head->next->next->next->next->next->next = new ListNode(9);
 
-  solution(root);
+  solution(head);
 }
