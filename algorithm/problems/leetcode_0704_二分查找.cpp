@@ -5,7 +5,7 @@ int32_t solution(std::vector<int32_t> &nums, int32_t target) {
   int32_t gt = nums.size() - 1;
 
   while (lt <= gt) {
-    int32_t mid = (lt + gt) / 2;
+    int32_t mid = (lt + gt) >> 1;
 
     if (target < nums[mid]) {
       gt = mid - 1;
