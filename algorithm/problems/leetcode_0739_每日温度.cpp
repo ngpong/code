@@ -23,10 +23,3 @@ std::vector<int32_t> solution(std::vector<int32_t> &temperatures) {
 
   return ans;
 }
-
-int32_t main(int32_t argc, char* argv[]) {
-  std::vector<int32_t> temperatures = {
-    73, 74, 75, 71, 69, 72, 76, 73
-  };
-  solution(temperatures);
-}
