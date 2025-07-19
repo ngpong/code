@@ -3,6 +3,7 @@
 #include <bit>
 #include <cstdlib>
 #include <cmath>
+#include <ranges>
 #include <bitset>
 #include <set>
 #include <unordered_set>
