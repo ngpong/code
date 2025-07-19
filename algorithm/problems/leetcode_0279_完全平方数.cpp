@@ -32,14 +32,3 @@ int32_t solution(int32_t n) {
     return count;
   }(n);
 }
-
-int32_t main(int32_t argc, char* argv[]) {
-  std::vector<int32_t> v;
-  for (int32_t i = 0; i < 20; i++) {
-    v.push_back(i);
-  }
-
-  for (auto num : v) {
-    std::cout << num << ": " << std::ceil(std::sqrt(num)) << std::endl;
-  }
-}

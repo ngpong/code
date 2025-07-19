@@ -67,7 +67,3 @@ int32_t solution3(int32_t amount, std::vector<int32_t> &coins) {
 
   return dp[amount];
 }
-
-int main(void) {
-  return EXIT_SUCCESS;
-}
