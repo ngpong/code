@@ -1,10 +1,8 @@
 #include "common.hpp"
 
-int32_t solution(int32_t n) {
-  int32_t root = std::ceil(std::sqrt(n));
-
+int32_t solution1(int32_t n) {
   std::vector<int32_t> squares;
-  for (int32_t i = root; i > 0; i--) {
+  for (int32_t i = std::ceil(std::sqrt(n)); i > 0; i--) {
     squares.push_back(std::pow(i, 2));
   }
 
@@ -31,4 +29,29 @@ int32_t solution(int32_t n) {
 
     return count;
   }(n);
+}
+
+int32_t solution2(int32_t n) {
+  std::vector<int32_t> squares;
+  for (int32_t i = std::ceil(std::sqrt(n)); i > 0; i--) {
+    squares.push_back(std::pow(i, 2));
+  }
+
+  std::vector<int32_t> dp(n + 1, INT32_MAX);
+  dp[0] = 0;
+  for (int32_t i = 1; i <= n; i++) {
+    int32_t count = INT32_MAX;
+    for (auto &sq : std::as_const(squares)) {
+      if (i >= sq) {
+        int32_t opt = dp[i - sq];
+        count = std::min(count, opt);
+      }
+    }
+
+    if (count != INT32_MAX) {
+      dp[i] = count + 1;
+    }
+  }
+
+  return dp[n];
 }

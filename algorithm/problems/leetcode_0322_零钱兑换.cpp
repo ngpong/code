@@ -57,11 +57,16 @@ int32_t solution3(int32_t amount, std::vector<int32_t> &coins) {
   dp[0] = 0;
 
   for (int32_t i = 1; i <= amount; i++) {
+    int32_t amount = INT32_MAX;
     for(auto &coin : coins) {
       if (coin <= i) {
         int32_t opt = dp[i - coin];
-        dp[i] = std::min(dp[i], opt == INT32_MAX ? INT32_MAX : opt + 1);
+        amount = std::min(amount, opt);
       }
+    }
+
+    if (amount != INT32_MAX) {
+      dp[i] = amount + 1;
     }
   }
 
