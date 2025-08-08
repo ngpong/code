@@ -8,7 +8,7 @@ struct TrieNode {
 };
 
 class Trie {
-  TrieNode* m_root = new TrieNode();
+  TrieNode *m_root = new TrieNode();
 
   TrieNode *traverse(const std::string &word, bool alloc = false) {
     TrieNode *node = m_root;

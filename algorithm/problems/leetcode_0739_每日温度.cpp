@@ -3,22 +3,18 @@
 std::vector<int32_t> solution(std::vector<int32_t> &temperatures) {
   std::vector<int32_t> ans(temperatures.size());
 
-  std::stack<uint64_t> st;
+  std::stack<int32_t> st;
   for (int32_t i = 0; i < temperatures.size(); i++) {
-    int32_t temp = temperatures[i];
-
     while (!st.empty()) {
-      uint64_t flg = st.top();
-
-      if (temp > (flg >> 32)) {
-        int32_t j = flg & 0xFFFFFFFF;
+      int32_t j = st.top();
+      if (temperatures[i] > temperatures[j]) {
         ans[j] = i - j;
         st.pop();
       } else {
         break;
       }
     }
-    st.push((static_cast<uint64_t>(temp) << 32) | i);
+    st.push(i);
   }
 
   return ans;

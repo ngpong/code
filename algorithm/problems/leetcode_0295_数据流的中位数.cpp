@@ -51,29 +51,3 @@ public:
     }
   }
 };
-
-
-int main(void) {
-  std::vector<int> m_datas = {  2, 4, 3, 1, 7, 9, 5, 8, 6, 10, 0, 13 };
-
-  while (!min_heap.empty() && !max_heap.empty()) {
-    int min = min_heap.top(), max = max_heap.top();
-    if (max > min) {
-      min_heap.push(max);
-      max_heap.pop();
-      max_heap.push(min);
-      min_heap.pop();
-      min = min_heap.top(), max = max_heap.top();
-    } else {
-      break;
-    }
-  }
-
-  if (max_heap.size() == min_heap.size()) {
-    std::cout << (max_heap.top() + min_heap.top()) / 2 << std::endl;
-  } else {
-    std::cout << max_heap.top() << std::endl;
-  }
-
-  return EXIT_SUCCESS;
-}

@@ -1,7 +1,7 @@
 #include "common.hpp"
 
 TreeNode *solution(TreeNode *root, TreeNode *p, TreeNode *q) {
- if (!root) {
+  if (!root) {
     return nullptr;
   }
 
