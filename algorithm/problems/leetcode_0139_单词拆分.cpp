@@ -15,7 +15,7 @@ bool solution1(std::string s, std::vector<std::string>& wordDict) {
 
     bool match = false;
     for (int32_t j = i; j >= 0; j--) {
-      if (match) {
+      if (match) { // 剪枝
         break;
       }
 
@@ -45,4 +45,21 @@ bool solution2(std::string s, std::vector<std::string>& wordDict) {
   }
 
   return dp[s.size() - 1];
+}
+
+bool solution3(std::string s, std::vector<std::string>& wordDict) {
+  std::unordered_set<std::string> words(wordDict.begin(), wordDict.end());
+
+  std::vector<bool> dp(s.size() + 1, false);
+  dp[0] = true;
+  for (int32_t i = 1; i <= s.size(); i++) {
+    for (int32_t j = i - 1; j >= 0; j--) {
+      dp[i] = words.count(s.substr(j, i - j)) && dp[j];
+      if (dp[i]) {
+        break;
+      }
+    }
+  }
+
+  return dp[s.size()];
 }

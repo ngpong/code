@@ -1,9 +1,6 @@
 #include "common.hpp"
 
 int32_t solution1(std::vector<int32_t> &stones) {
-  // 对于前 i 个物品，至多装满容量为 j 的背包的情况下最大重量为dp[i][j]
-  // dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - nums[i]] + nums[i])
-
   int32_t sum = std::reduce(stones.begin(), stones.end());
   int32_t capacity = sum / 2;
 

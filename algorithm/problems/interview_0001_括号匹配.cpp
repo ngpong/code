@@ -12,28 +12,24 @@
 // ']'
 
 std::string solution(const std::string& str) {
-  std::string l = "";
-  std::string r = "";
+  // l: 在遍历完成 s 后，因无法完成配对导致多出来的左括号 '['
+  // r: 在遍历完成 s 后，因无法完成配对导致多出来的右括号 ']'
+  int32_t l = 0, r = 0;
 
-  int32_t cnt = 0;
   for (auto c : str) {
     switch (c) {
       // 匹配到 '[' 的情况，那么累加量要 +1，相应的，在结束循环后，字符串的右边根据该累加量的总和来补齐 ']'
-      case '[': cnt++; break;
+      case '[': l++; break;
       // 匹配到 ']' 的情况，那么累加量要 -1，相应的字符串左边要补齐一个 '['
-      case ']': cnt--; break;
+      case ']': l--; break;
     }
 
-    // 出现了 ']' 不平衡的情况
-    if (cnt < 0) {
-      l += "[";
-      cnt++;
+    // 出现了不平衡的情况，此时多出了一个 ']'
+    if (l < 0) {
+      l = 0;
+      r++;
     }
   }
 
-  for (int32_t i = 0; i < cnt; ++i) {
-    r += "]";
-  }
-
-  return l + str + r;
+  return std::string(r, '[') + str + std::string(l, ']');
 }

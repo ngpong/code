@@ -1,30 +1,30 @@
 #include "common.hpp"
 
-std::unordered_map<int32_t, int32_t> mem;
-int32_t dfs(std::vector<int> &nums, int32_t k) {
-  if (auto it = mem.find(k); it != mem.end()) {
-    return it->second;
-  }
-
-  int32_t count = 0;
-  for (int32_t i = k - 1; i >= 0; i--) {
-    if (nums[i] < nums[k]) {
-      count = std::max(count, dfs(nums, i));
-    }
-  }
-
-  count += 1;
-  mem[k] = count;
-
-  return count;
-}
 int32_t solution1(std::vector<int32_t> &nums) {
-  int32_t count = 0;
-  for (int32_t k = nums.size() - 1; k >= 0; k--) {
-    count = std::max(count, dfs(nums, k));
+  std::vector<int32_t> mem(nums.size(), -1);
+  auto dfs = [&](this const auto &dfs, int32_t i) -> int32_t {
+    if (mem[i] != -1) {
+      return mem[i];
+    }
+
+    int32_t len = 0;
+    for (int32_t j = i - 1; j >= 0; j--) {
+      if (nums[j] < nums[i]) {
+        len = std::max(len, dfs(j));
+      }
+    }
+
+    mem[i] = ++len;
+
+    return len;
+  };
+
+  int32_t len = 0;
+  for (int32_t i = nums.size() - 1; i >= 0; i--) {
+    len = std::max(len, dfs(i));
   }
 
-  return count;
+  return len;
 }
 
 int32_t solution2(std::vector<int32_t> &nums) {
@@ -32,15 +32,15 @@ int32_t solution2(std::vector<int32_t> &nums) {
 
   std::vector<int32_t> dp(nums.size(), 0);
   for (int32_t i = 0; i < nums.size(); i++) {
-    int32_t count = 0;
-    for (int32_t j = 0; j <= i; j++) {
+    int32_t len = 0;
+    for (int32_t j = 0; j < i; j++) {
       if (nums[j] < nums[i]) {
-        count = std::max(count, dp[j]);
+        len = std::max(len, dp[j]);
       }
     }
-    dp[i] = ++count;
+    dp[i] = ++len;
 
-    ans = std::max(ans, dp[i]);
+    ans = std::max(ans, len);
   }
 
   return ans;

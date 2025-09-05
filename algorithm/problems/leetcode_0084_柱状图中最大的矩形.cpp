@@ -1,24 +1,20 @@
 #include "common.hpp"
 
-
-
 int32_t solution(std::vector<int32_t> &heights) {
-  std::stack<std::pair<int32_t, int32_t>> sk;
+  std::stack<int32_t> sk;
   std::vector<int32_t> lmin(heights.size(), -1);
   std::vector<int32_t> rmin(heights.size(), heights.size());
   for (int32_t i = 0; i < heights.size(); i++) {
-    int32_t h = heights[i];
-
-    while (!sk.empty() && sk.top().first > h) {
-      rmin[sk.top().second] = i;
+    while (!sk.empty() && heights[sk.top()] > heights[i]) {
+      rmin[sk.top()] = i;
       sk.pop();
     }
 
     // 当压入元素时，如果栈顶存在元素，那么栈顶元素则为当前压入元素左边第一个小于它的元素。
     if (!sk.empty()) {
-      lmin[i] = sk.top().second;
+      lmin[i] = sk.top();
     }
-    sk.push({ h, i });
+    sk.push(i);
   }
 
   int32_t ans = INT32_MIN;

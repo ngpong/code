@@ -1,12 +1,12 @@
 #include "common.hpp"
 
 // 自顶向下的递归
-int32_t fibonacci1(int32_t n) {
+int32_t solution1(int32_t n) {
   if (n <= 2) return n == 0 ? 0 : 1;
-  return fibonacci1(n - 1) + fibonacci1(n - 2);
+  return solution1(n - 1) + solution1(n - 2);
 }
 
-int32_t fibonacci2(int32_t n, std::map<int32_t, int32_t>& m) {
+int32_t solution2(int32_t n, std::map<int32_t, int32_t>& m) {
   if (auto it = m.find(n); it != m.end()) {
     return it->second;
   }
@@ -17,14 +17,14 @@ int32_t fibonacci2(int32_t n, std::map<int32_t, int32_t>& m) {
   } else if (n <= 2) {
     sum = 1;
   } else {
-    sum = fibonacci2(n - 1, m) + fibonacci2(n - 2, m);
+    sum = solution2(n - 1, m) + solution2(n - 2, m);
   }
   m[n] = sum;
 
   return sum;
 }
 
-int32_t fibonacci3(int32_t n) {
+int32_t solution3(int32_t n) {
   if (n == 0) return 0;
   int32_t dp[2] = { 1, 1 };
 
@@ -34,13 +34,5 @@ int32_t fibonacci3(int32_t n) {
     dp[1] = sum;
   }
 
-  return dp[n];
-}
-
-int main(void) {
-  fibonacci3(10);
-  fibonacci2(10);
-  fibonacci1(10);
-
-  return EXIT_SUCCESS;
+  return dp[1];
 }

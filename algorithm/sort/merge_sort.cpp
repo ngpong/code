@@ -33,8 +33,8 @@ void solution_1(Array &arr, int32_t size) {
     }
   };
 
-  make_y_combinator([&](auto merge_sort, int32_t low, int32_t high) -> void {
-    if (low == high) {
+  [&](this const auto &merge_sort, int32_t low, int32_t high) -> void {
+    if (low >= high) {
       return;
     }
 
@@ -42,7 +42,7 @@ void solution_1(Array &arr, int32_t size) {
     merge_sort(low, mid);
     merge_sort(mid + 1, high);
     merge(low, mid + 1, high);
-  })(0, size - 1);
+  }(0, size - 1);
 }
 
 int32_t main (int32_t argc, char *argv[]) {

@@ -1,14 +1,4 @@
-#include <iostream>
-#include <vector>
-
-using namespace std;
-
-#define SWAP(x, y) \
-  if (x != y) {    \
-    x = x ^ y;     \
-    y = x ^ y;     \
-    x = x ^ y;     \
-  }
+#include "common.hpp"
 
 // 题目: 给定一个数组，将偶数都放在左边，奇数都放在右边
 //
@@ -18,29 +8,24 @@ using namespace std;
 // 就证明在执行交换前，首尾指针都属于奇数，那么这时候我们让尾指针往下走，继续
 // 判断
 
-std::vector<int> event_left_odd_right(std::vector<int> &nums) {
-  if (nums.size() == 0) return nums;
+std::vector<int32_t> sortArrayByParity(std::vector<int32_t>& nums) {
+  int32_t i = 0, j = nums.size() - 1;
+  while (i <= j) {
+    bool i_even = nums[i] % 2 == 0;
+    bool j_odd  = nums[j] % 2 == 1;
 
-  int i = 0;
-  int j = nums.size() - 1;
-  while (i < j) {
-    while (nums[i] % 2 != 0) {
-      SWAP(nums[i], nums[j]);
+    if (!i_even && !j_odd) {
+      std::swap(nums[i], nums[j]);
+      i++;
       j--;
+    } else {
+      if (i_even) {
+        i++;
+      }
+      if (j_odd) {
+        j--;
+      }
     }
-    i++;
   }
-
   return nums;
-}
-
-int main(void) {
-  vector<int> arr = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-  arr = event_left_odd_right(arr);
-
-  for (auto val = arr.begin(); val != arr.end(); ++val) {
-    cout << *val << endl;
-  }
-
-  return EXIT_SUCCESS;
 }

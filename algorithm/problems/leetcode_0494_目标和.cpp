@@ -1,8 +1,7 @@
 #include "common.hpp"
 
 int32_t solution1(std::vector<int32_t> &nums, int32_t target) {
-  int32_t sum = nums[0];
-  for (auto &num : std::span(nums).subspan(1)) { sum += num; }
+  int32_t sum = std::reduce(nums.begin(), nums.end());
 
   float capacity = (sum + std::abs(target)) / 2.0;
   // 如果存在小数点代表无法求出组合
@@ -40,8 +39,7 @@ int32_t solution1(std::vector<int32_t> &nums, int32_t target) {
 }
 
 int32_t solution2(std::vector<int32_t> &nums, int32_t target) {
- int32_t sum = nums[0];
-  for (auto &num : std::span(nums).subspan(1)) { sum += num; }
+  int32_t sum = std::reduce(nums.begin(), nums.end());
 
   float capacity = (sum + std::abs(target)) / 2.0;
   if (std::floor(capacity) != capacity) {

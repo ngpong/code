@@ -29,12 +29,12 @@ std::vector<int32_t> solution1(std::vector<int32_t> &nums, int32_t k) {
 std::vector<int32_t> solution2(std::vector<int32_t> &nums, int32_t k) {
   std::priority_queue<std::pair<int32_t, int32_t>> q;
   for (int32_t i = 0; i < k; i++) {
-    q.push({ nums[i], i });
+    q.emplace(nums[i], i);
   }
 
   std::vector<int32_t> ans = { std::get<0>(q.top()) };
   for (int32_t i = k; i < nums.size(); i++) {
-    q.push({ nums[i], i });
+    q.emplace(nums[i], i);
     while (q.top().second <= i - k) { // i - k 为当前窗口左边界之外
       q.pop();
     }
