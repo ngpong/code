@@ -1,53 +1,33 @@
 #include "common.hpp"
 
-ListNode *mergeList(ListNode *left, ListNode *right) {
-  if (!left || !right) {
-    return !left ? right : left;
+bool increasingTriplet(std::vector<int32_t>& nums) {
+  int32_t n = nums.size();
+  if (n < 3) {
+    return false;
   }
 
-  ListNode sentinel;
-  ListNode *dummy = &sentinel;
-  while (left && right) {
-    if (left->val < right->val) {
-      dummy->next = left;
-      left = left->next;
-    } else {
-      dummy->next = right;
-      right = right->next;
+  std::vector<int32_t> lmins(n);
+  lmins[0] = nums[0];
+  for (int32_t i = 1; i < n; i++) {
+    lmins[i] = std::min(lmins[i - 1], nums[i]);
+  }
+
+  std::vector<int32_t> rmaxs(n);
+  rmaxs[n - 1] = nums[n - 1];
+  for (int32_t i = n - 2; i >= 0; i--) {
+    rmaxs[i] = std::max(rmaxs[i + 1], nums[i]);
+  }
+
+  for (int32_t i = 1; i < n - 1; i++) {
+    int32_t j = i - 1;
+    int32_t k = i + 1;
+    if (lmins[j] < nums[i] && nums[i] < rmaxs[k]) {
+      return true;
     }
-    dummy = dummy->next;
   }
 
-  if (left) {
-    dummy->next = left;
-  } else {
-    dummy->next = right;
-  }
-
-  return sentinel.next;
-}
-
-ListNode *sortList(ListNode *head) {
-  if (!head || !head->next) {
-    return head;
-  }
-
-  ListNode *s = head, *f = head;
-  while (f->next && f->next->next) {
-    s = s->next;
-    f = f->next->next;
-  }
-
-  ListNode *left = head;
-  ListNode *right = s->next;
-  s->next = nullptr;
-
-  left = sortList(left);
-  right = sortList(right);
-
-  return mergeList(left, right);
+  return false;
 }
 
 int32_t main(int32_t argc, char *argv[]) {
-  std::vector<int32_t> prices = { 7, 1, 5, 3, 6, 4 };
 }
