@@ -12,11 +12,33 @@ void solution_bubble_sort_01(Array &arr, int32_t size) {
 
 void solution_bubble_sort_02(Array &arr, int32_t size) {
   for (int32_t i = 0; i < size; i++) {
+    bool is_swapped = false;
     for (int32_t j = 0; j < size - i - 1; j++) {
       if (arr[j] > arr[j + 1]) {
         std::swap(arr[j], arr[j + 1]);
+        is_swapped = true;
       }
     }
+    if (!is_swapped) break;
+  }
+}
+
+void solution_bubble_sort_03(Array &arr, int32_t size) {
+  int32_t lt = 0, gt = size - 1;
+  while (lt < gt) {
+    for (int32_t i = lt; i < gt; i++) {
+      if (arr[i] > arr[i + 1]) {
+        std::swap(arr[i], arr[i + 1]);
+      }
+    }
+    gt--;
+
+    for (int32_t j = gt; j > lt; j--) {
+      if (arr[j] < arr[j - 1]) {
+        std::swap(arr[j], arr[j - 1]);
+      }
+    }
+    lt++;
   }
 }
 
@@ -396,7 +418,10 @@ int32_t main(void) {
     { solution_shell_sort,     "solution_shell_sort"     },
     { solution_insert_sort,    "solution_insert_sort"    },
     { solution_selection_sort, "solution_selection_sort" },
-    { solution_bubble_sort_01,    "solution_bubble_sort_01"    },
+    { solution_bubble_sort_01, "solution_bubble_sort_01" },
+    { solution_bubble_sort_01, "solution_bubble_sort_01" },
+    { solution_bubble_sort_02, "solution_bubble_sort_02" },
+    { solution_bubble_sort_03, "solution_bubble_sort_03" },
   });
 
   solution_benchmark({
@@ -413,7 +438,9 @@ int32_t main(void) {
     { solution_shell_sort,     "solution_shell_sort"     },
     { solution_insert_sort,    "solution_insert_sort"    },
     { solution_selection_sort, "solution_selection_sort" },
-    { solution_bubble_sort_01,    "solution_bubble_sort_01"    },
+    { solution_bubble_sort_01, "solution_bubble_sort_01" },
+    { solution_bubble_sort_02, "solution_bubble_sort_02" },
+    { solution_bubble_sort_03, "solution_bubble_sort_03" },
   });
 
   return 0;
