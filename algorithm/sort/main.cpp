@@ -1,8 +1,8 @@
 #include "common.hpp"
 
-void solution_bubble_sort_01(Array &arr, int32_t size) {
-  for (int32_t i = 0; i < size; i++) {
-    for (int32_t j = 0; j < size - i - 1; j++) {
+void solution_bubble_sort_01(Array &arr, int32_t n) {
+  for (int32_t i = 0; i < n; i++) {
+    for (int32_t j = 0; j < n - i - 1; j++) {
       if (arr[j] > arr[j + 1]) {
         std::swap(arr[j], arr[j + 1]);
       }
@@ -10,10 +10,10 @@ void solution_bubble_sort_01(Array &arr, int32_t size) {
   }
 }
 
-void solution_bubble_sort_02(Array &arr, int32_t size) {
-  for (int32_t i = 0; i < size; i++) {
+void solution_bubble_sort_02(Array &arr, int32_t n) {
+  for (int32_t i = 0; i < n; i++) {
     bool is_swapped = false;
-    for (int32_t j = 0; j < size - i - 1; j++) {
+    for (int32_t j = 0; j < n - i - 1; j++) {
       if (arr[j] > arr[j + 1]) {
         std::swap(arr[j], arr[j + 1]);
         is_swapped = true;
@@ -23,8 +23,8 @@ void solution_bubble_sort_02(Array &arr, int32_t size) {
   }
 }
 
-void solution_bubble_sort_03(Array &arr, int32_t size) {
-  int32_t lt = 0, gt = size - 1;
+void solution_bubble_sort_03(Array &arr, int32_t n) {
+  int32_t lt = 0, gt = n - 1;
   while (lt < gt) {
     for (int32_t i = lt; i < gt; i++) {
       if (arr[i] > arr[i + 1]) {
@@ -42,10 +42,10 @@ void solution_bubble_sort_03(Array &arr, int32_t size) {
   }
 }
 
-void solution_selection_sort(Array &arr, int32_t size) {
-  for (int32_t i = 0; i < size; i++) {
+void solution_selection_sort(Array &arr, int32_t n) {
+  for (int32_t i = 0; i < n; i++) {
     int32_t min = i;
-    for (int32_t j = i + 1; j < size; j++) {
+    for (int32_t j = i + 1; j < n; j++) {
       if (arr[j] < arr[min]) {
         min = j;
       }
@@ -54,8 +54,8 @@ void solution_selection_sort(Array &arr, int32_t size) {
   }
 }
 
-void solution_insert_sort(Array &arr, int32_t size) {
-  for (int32_t i = 1; i < size; i++) {
+void solution_insert_sort(Array &arr, int32_t n) {
+  for (int32_t i = 1; i < n; i++) {
     int32_t k = arr[i];
 
     int32_t j = i - 1;
@@ -66,9 +66,9 @@ void solution_insert_sort(Array &arr, int32_t size) {
   }
 }
 
-void solution_shell_sort(Array &arr, int32_t size) {
-  for (int32_t gs = size / 2; gs > 0; gs /= 2) {
-    for (int32_t i = gs; i < size; i++) {
+void solution_shell_sort(Array &arr, int32_t n) {
+  for (int32_t gs = n / 2; gs > 0; gs /= 2) {
+    for (int32_t i = gs; i < n; i++) {
       int32_t k = arr[i];
 
       int32_t j = i;
@@ -80,9 +80,9 @@ void solution_shell_sort(Array &arr, int32_t size) {
   }
 }
 
-void solution_bucket_sort(Array &arr, int32_t size) {
+void solution_bucket_sort(Array &arr, int32_t n) {
   int32_t max = arr[0];
-  for (int32_t i = 1; i < size; i++) {
+  for (int32_t i = 1; i < n; i++) {
     if (arr[i] > max) {
       max = arr[i];
     }
@@ -90,7 +90,7 @@ void solution_bucket_sort(Array &arr, int32_t size) {
   max++;
 
   Array bucket(max, 0x0);
-  for (int32_t i = 0; i < size; i++) {
+  for (int32_t i = 0; i < n; i++) {
     bucket[arr[i]]++;
   }
 
@@ -102,9 +102,9 @@ void solution_bucket_sort(Array &arr, int32_t size) {
   }
 }
 
-void solution_counting_sort(Array &arr, int32_t size) {
+void solution_counting_sort(Array &arr, int32_t n) {
   int32_t max = arr[0];
-  for (int32_t i = 1; i < size; i++) {
+  for (int32_t i = 1; i < n; i++) {
     if (arr[i] > max) {
       max = arr[i];
     }
@@ -112,9 +112,9 @@ void solution_counting_sort(Array &arr, int32_t size) {
   max++;
 
   Array bucket(max, 0x0);
-  Array sorter(size, 0x0);
+  Array sorter(n, 0x0);
 
-  for (int32_t i = 0; i < size; i++) {
+  for (int32_t i = 0; i < n; i++) {
     bucket[arr[i]]++;
   }
 
@@ -122,16 +122,14 @@ void solution_counting_sort(Array &arr, int32_t size) {
     bucket[i] += bucket[i - 1];
   }
 
-  for (int32_t i = 0; i < size; i++) {
+  for (int32_t i = 0; i < n; i++) {
     sorter[--bucket[arr[i]]] = arr[i];
   }
 
-  for (int32_t i = 0; i < size; i++) {
-    arr[i] = sorter[i];
-  }
+  arr.swap(sorter);
 }
 
-void solution_heap_sort(Array &arr, int32_t size) {
+void solution_heap_sort(Array &arr, int32_t n) {
   auto heapify = [&](int32_t n, int32_t i) -> void {
     while (true) {
       int32_t l = i * 2 + 1;
@@ -154,17 +152,17 @@ void solution_heap_sort(Array &arr, int32_t size) {
     }
   };
 
-  int32_t n = size - 1;
-  for (int32_t i = (n - 1) / 2; i >= 0; i--) {
-    heapify(n, i);
+  int32_t last = n - 1;
+  for (int32_t i = (last - 1) / 2; i >= 0; i--) {
+    heapify(last, i);
   }
-  for (int32_t i = n; i > 0; i--) {
+  for (int32_t i = last; i > 0; i--) {
     std::swap(arr[0], arr[i]);
     heapify(i - 1, 0);
   }
 }
 
-void solution_quicksort_01(Array &arr, int32_t size) {
+void solution_quicksort_01(Array &arr, int32_t n) {
   auto quick_sort = make_y_combinator([&](auto quick_sort, int32_t low, int32_t high) -> void {
     if (low >= high) {
       return;
@@ -185,10 +183,10 @@ void solution_quicksort_01(Array &arr, int32_t size) {
     quick_sort(lt + 1, high);
   });
 
-  quick_sort(0, size - 1);
+  quick_sort(0, n - 1);
 }
 
-void solution_quicksort_02(Array &arr, int32_t size) {
+void solution_quicksort_02(Array &arr, int32_t n) {
   auto partition = make_y_combinator([&](auto partition, int32_t low, int32_t high) -> int32_t {
     int32_t p = arr[low];
 
@@ -212,33 +210,22 @@ void solution_quicksort_02(Array &arr, int32_t size) {
   });
 
   std::stack<int32_t> s;
-
-  if (size > 1) {
-    s.push(0);
-    s.push(size - 1);
-  }
-
+  s.push(0); s.push(n - 1);
   while (!s.empty()) {
-    int32_t high = s.top();
-    s.pop();
-    int32_t low = s.top();
-    s.pop();
+    int32_t high = s.top(); s.pop();
+    int32_t low = s.top(); s.pop();
+
+    if (low >= high) {
+      continue;
+    }
 
     int32_t mid = partition(low, high);
-
-    if (low < mid - 1) {
-      s.push(low);
-      s.push(mid - 1);
-    }
-
-    if (high > mid + 1) {
-      s.push(mid + 1);
-      s.push(high);
-    }
+    s.push(low); s.push(mid - 1);
+    s.push(mid + 1); s.push(high);
   }
 }
 
-void solution_quicksort_03(Array &arr, int32_t size) {
+void solution_quicksort_03(Array &arr, int32_t n) {
   make_y_combinator([&](auto qsort, int32_t low, int32_t high) -> void {
     if (low >= high) {
       return;
@@ -262,10 +249,10 @@ void solution_quicksort_03(Array &arr, int32_t size) {
 
     qsort(low, lt - 1);
     qsort(lt + 1, high);
-  })(0, size - 1);
+  })(0, n - 1);
 }
 
-void solution_quicksort_04(Array &arr, int32_t size) {
+void solution_quicksort_04(Array &arr, int32_t n) {
   make_y_combinator([&](auto qsort, int32_t low, int32_t high) -> void {
     if (low >= high) {
       return;
@@ -293,10 +280,10 @@ void solution_quicksort_04(Array &arr, int32_t size) {
 
     qsort(low, gt - 1);
     qsort(gt + 1, high);
-  })(0, size - 1);
+  })(0, n - 1);
 }
 
-void solution_quicksort_05(Array &arr, int32_t size) {
+void solution_quicksort_05(Array &arr, int32_t n) {
   [&](this const auto &qsort, int32_t low, int32_t high) {
     if (low >= high) {
       return;
@@ -317,10 +304,10 @@ void solution_quicksort_05(Array &arr, int32_t size) {
 
     qsort(low, lt - 1);
     qsort(gt, high);
-  }(0, size - 1);
+  }(0, n - 1);
 }
 
-void solution_merge_sort(Array &arr, int32_t size) {
+void solution_merge_sort(Array &arr, int32_t n) {
   auto merge = [&](int32_t l, int32_t m, int32_t r) -> void {
     int32_t lsize = m - l;
     Array larr(lsize);
@@ -363,19 +350,19 @@ void solution_merge_sort(Array &arr, int32_t size) {
     merge_sort(mid + 1, high);
 
     merge(low, mid + 1, high);
-  })(0, size - 1);
+  })(0, n - 1);
 }
 
-void solution_radix_sort(Array &arr, int32_t size) {
+void solution_radix_sort(Array &arr, int32_t n) {
   auto digit = [](int32_t num, int32_t exp) -> int32_t {
     return (num / exp) % 10;
   };
 
   auto radix_count = [&](int32_t exp) -> void {
-    Array sorter(size, 0x0);
+    Array sorter(n, 0x0);
     Array bucket(10, 0x0);
 
-    for (int32_t i = 0; i < size; i++) {
+    for (int32_t i = 0; i < n; i++) {
       bucket[digit(arr[i], exp)]++;
     }
 
@@ -383,17 +370,17 @@ void solution_radix_sort(Array &arr, int32_t size) {
       bucket[i] += bucket[i - 1];
     }
 
-    for (int32_t i = size - 1; i >= 0; i--) {
+    for (int32_t i = n - 1; i >= 0; i--) {
       sorter[--bucket[digit(arr[i], exp)]] = arr[i];
     }
 
-    for (int32_t i = 0; i < size; i++) {
+    for (int32_t i = 0; i < n; i++) {
       arr[i] = sorter[i];
     }
   };
 
   int32_t max = arr[0];
-  for (int32_t i = 1; i < size; i++) {
+  for (int32_t i = 1; i < n; i++) {
     if (arr[i] > max) {
       max = arr[i];
     }
