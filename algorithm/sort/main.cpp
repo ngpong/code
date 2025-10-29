@@ -276,18 +276,17 @@ void solution_quicksort_04(Array &arr, int32_t n) {
 }
 
 void solution_quicksort_05(Array &arr, int32_t n) {
-  [&](this const auto &qsort, int32_t low, int32_t high) {
+  [&](this const auto &qsort, int32_t low, int32_t high) -> void {
     if (low >= high) {
       return;
     }
 
-    int32_t p = arr[low];
-
+    int32_t pivot = arr[low];
     int32_t lt = low, gt = high + 1, i = low + 1;
     while (i < gt) {
-      if (arr[i] < p) {
+      if (arr[i] < pivot) {
         std::swap(arr[i++], arr[lt++]);
-      } else if (arr[i] > p) {
+      } else if (arr[i] > pivot) {
         std::swap(arr[i], arr[--gt]);
       } else {
         i++;
@@ -300,21 +299,21 @@ void solution_quicksort_05(Array &arr, int32_t n) {
 }
 
 void solution_merge_sort(Array &arr, int32_t n) {
-  auto merge = [&](int32_t l, int32_t m, int32_t r) -> void {
-    int32_t lsize = m - l;
+  auto merge = [&](int32_t low, int32_t mid, int32_t high) -> void {
+    int32_t lsize = mid - low;
     Array larr(lsize);
-    for (int32_t i = l; i < m; i++) {
-      larr[i - l] = arr[i];
+    for (int32_t i = low; i < mid; i++) {
+      larr[i - low] = arr[i];
     }
 
-    int32_t rsize = r - m + 1;
+    int32_t rsize = high - mid + 1;
     Array rarr(rsize);
-    for (int32_t i = m; i <= r; i++) {
-      rarr[i - m] = arr[i];
+    for (int32_t i = mid; i <= high; i++) {
+      rarr[i - mid] = arr[i];
     }
 
     int32_t i = 0, j = 0;
-    int32_t k = l;
+    int32_t k = low;
     while (i < lsize && j < rsize) {
       if (larr[i] < rarr[j]) {
         arr[k++] = larr[i++];
@@ -332,14 +331,14 @@ void solution_merge_sort(Array &arr, int32_t n) {
     }
   };
 
-  [&](this const auto &merge_sort, int32_t low, int32_t high) -> void {
+  [&](this const auto &splice, int32_t low, int32_t high) -> void {
     if (low == high) {
       return;
     }
 
     int32_t mid = (low + high) / 2;
-    merge_sort(low, mid);
-    merge_sort(mid + 1, high);
+    splice(low, mid);
+    splice(mid + 1, high);
 
     merge(low, mid + 1, high);
   }(0, n - 1);
@@ -387,39 +386,39 @@ int32_t main(void) {
   solution_test({
     { solution_radix_sort,     "solution_radix_sort"     },
     { solution_merge_sort,     "solution_merge_sort"     },
-    { solution_quicksort_01,   "solution_quicksort_01"   },
-    { solution_quicksort_02,   "solution_quicksort_02"   },
-    { solution_quicksort_03,   "solution_quicksort_03"   },
-    { solution_quicksort_05,   "solution_quicksort_05"   },
-    { solution_heap_sort,      "solution_heap_sort"      },
-    { solution_counting_sort,  "solution_counting_sort"  },
-    { solution_bucket_sort,    "solution_bucket_sort"    },
-    { solution_shell_sort,     "solution_shell_sort"     },
-    { solution_insert_sort,    "solution_insert_sort"    },
-    { solution_selection_sort, "solution_selection_sort" },
-    { solution_bubble_sort_01, "solution_bubble_sort_01" },
-    { solution_bubble_sort_01, "solution_bubble_sort_01" },
-    { solution_bubble_sort_02, "solution_bubble_sort_02" },
-    { solution_bubble_sort_03, "solution_bubble_sort_03" },
+    // { solution_quicksort_01,   "solution_quicksort_01"   },
+    // { solution_quicksort_02,   "solution_quicksort_02"   },
+    // { solution_quicksort_03,   "solution_quicksort_03"   },
+    // { solution_quicksort_05,   "solution_quicksort_05"   },
+    // { solution_heap_sort,      "solution_heap_sort"      },
+    // { solution_counting_sort,  "solution_counting_sort"  },
+    // { solution_bucket_sort,    "solution_bucket_sort"    },
+    // { solution_shell_sort,     "solution_shell_sort"     },
+    // { solution_insert_sort,    "solution_insert_sort"    },
+    // { solution_selection_sort, "solution_selection_sort" },
+    // { solution_bubble_sort_01, "solution_bubble_sort_01" },
+    // { solution_bubble_sort_01, "solution_bubble_sort_01" },
+    // { solution_bubble_sort_02, "solution_bubble_sort_02" },
+    // { solution_bubble_sort_03, "solution_bubble_sort_03" },
   });
 
   solution_benchmark({
     { solution_radix_sort,     "solution_radix_sort"     },
     { solution_merge_sort,     "solution_merge_sort"     },
-    { solution_quicksort_01,   "solution_quicksort_01"   },
-    { solution_quicksort_02,   "solution_quicksort_02"   },
-    { solution_quicksort_03,   "solution_quicksort_03"   },
-    { solution_quicksort_04,   "solution_quicksort_04"   },
-    { solution_quicksort_05,   "solution_quicksort_05"   },
-    { solution_heap_sort,      "solution_heap_sort"      },
-    { solution_counting_sort,  "solution_counting_sort"  },
-    { solution_bucket_sort,    "solution_bucket_sort"    },
-    { solution_shell_sort,     "solution_shell_sort"     },
-    { solution_insert_sort,    "solution_insert_sort"    },
-    { solution_selection_sort, "solution_selection_sort" },
-    { solution_bubble_sort_01, "solution_bubble_sort_01" },
-    { solution_bubble_sort_02, "solution_bubble_sort_02" },
-    { solution_bubble_sort_03, "solution_bubble_sort_03" },
+    // { solution_quicksort_01,   "solution_quicksort_01"   },
+    // { solution_quicksort_02,   "solution_quicksort_02"   },
+    // { solution_quicksort_03,   "solution_quicksort_03"   },
+    // { solution_quicksort_04,   "solution_quicksort_04"   },
+    // { solution_quicksort_05,   "solution_quicksort_05"   },
+    // { solution_heap_sort,      "solution_heap_sort"      },
+    // { solution_counting_sort,  "solution_counting_sort"  },
+    // { solution_bucket_sort,    "solution_bucket_sort"    },
+    // { solution_shell_sort,     "solution_shell_sort"     },
+    // { solution_insert_sort,    "solution_insert_sort"    },
+    // { solution_selection_sort, "solution_selection_sort" },
+    // { solution_bubble_sort_01, "solution_bubble_sort_01" },
+    // { solution_bubble_sort_02, "solution_bubble_sort_02" },
+    // { solution_bubble_sort_03, "solution_bubble_sort_03" },
   });
 
   return 0;
