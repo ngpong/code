@@ -1,37 +1,38 @@
 #include "common.hpp"
 
-void solution_counting_sort(Array &arr, int32_t size) {
-  int32_t max = arr[0];
-  for (int32_t i = 1; i < size; i++) {
-    if (arr[i] > max) {
-      max = arr[i];
+void solution_quicksort_03(Array &arr, int32_t n) {
+  std::function<void(int32_t, int32_t)> qsort = [&](int32_t low, int32_t high) -> void {
+    if (low >= high) {
+      return;
     }
-  }
-  max++;
 
-  Array bucket(max, 0x0);
-  Array sorter(size, 0x0);
+    int32_t pivot = arr[low];
 
-  for (int32_t i = 0; i < size; i++) {
-    bucket[arr[i]]++;
-  }
+    int32_t lt = low, gt = high;
+    while (lt < gt) {
+      while (lt < gt && arr[gt] >= pivot) {
+        gt--;
+      }
+      while (lt < gt && arr[lt] <= pivot) {
+        lt++;
+      }
+      if (lt < gt) {
+        std::swap(arr[lt], arr[gt]);
+      }
+    }
+    std::swap(arr[low], arr[lt]);
 
-  for (int32_t i = 1; i < max; i++) {
-    bucket[i] += bucket[i - 1];
-  }
-
-  for (int32_t i = 0; i < size; i++) {
-    sorter[--bucket[arr[i]]] = arr[i];
-  }
-
-  arr.swap(sorter);
+    qsort(low, lt - 1);
+    qsort(lt + 1, high);
+  };
+  qsort(0, n - 1);
 }
 
 int32_t main(void) {
   std::vector<int32_t> arr = {
     9, 8, 7, 6, 5, 5, 5, 5, 4, 3, 2, 1
   };
-  solution_counting_sort(arr, arr.size());
+  solution_quicksort_03(arr, arr.size());
 
   return EXIT_SUCCESS;
 }

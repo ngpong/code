@@ -168,11 +168,10 @@ void solution_quicksort_01(Array &arr, int32_t n) {
       return;
     }
 
-    int32_t p = arr[low];
-
+    int32_t pivot = arr[low];
     int32_t lt = low, i = low + 1;
     while (i <= high) {
-      if (arr[i] <= p) {
+      if (arr[i] <= pivot) {
         std::swap(arr[i], arr[++lt]);
       }
       ++i;
