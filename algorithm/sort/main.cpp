@@ -129,7 +129,7 @@ void solution_counting_sort(Array &arr, int32_t n) {
   arr.swap(sorter);
 }
 
-void solution_heap_sort(Array &arr, int32_t n) {
+void solution_heap_sort(Array &arr, int32_t size) {
   auto heapify = [&](int32_t n, int32_t i) -> void {
     while (true) {
       int32_t l = i * 2 + 1;
@@ -152,18 +152,18 @@ void solution_heap_sort(Array &arr, int32_t n) {
     }
   };
 
-  int32_t last = n - 1;
-  for (int32_t i = (last - 1) / 2; i >= 0; i--) {
-    heapify(last, i);
+  int32_t n = size - 1;
+  for (int32_t i = (n - 1) / 2; i >= 0; i--) {
+    heapify(n, i);
   }
-  for (int32_t i = last; i > 0; i--) {
+  for (int32_t i = n; i > 0; i--) {
     std::swap(arr[0], arr[i]);
     heapify(i - 1, 0);
   }
 }
 
 void solution_quicksort_01(Array &arr, int32_t n) {
-  auto quick_sort = make_y_combinator([&](auto quick_sort, int32_t low, int32_t high) -> void {
+  [&](this const auto &qsort, int32_t low, int32_t high) -> void {
     if (low >= high) {
       return;
     }
@@ -179,15 +179,13 @@ void solution_quicksort_01(Array &arr, int32_t n) {
     }
     std::swap(arr[low], arr[lt]);
 
-    quick_sort(low, lt - 1);
-    quick_sort(lt + 1, high);
-  });
-
-  quick_sort(0, n - 1);
+    qsort(low, lt - 1);
+    qsort(lt + 1, high);
+  }(0, n - 1);
 }
 
 void solution_quicksort_02(Array &arr, int32_t n) {
-  auto partition = make_y_combinator([&](auto partition, int32_t low, int32_t high) -> int32_t {
+  auto partition = [&](this const auto &partition, int32_t low, int32_t high) -> int32_t {
     int32_t p = arr[low];
 
     int32_t lt = low, gt = high;
@@ -207,7 +205,7 @@ void solution_quicksort_02(Array &arr, int32_t n) {
     std::swap(arr[lt], arr[low]);
 
     return lt;
-  });
+  };
 
   std::stack<int32_t> s;
   s.push(0); s.push(n - 1);
@@ -226,7 +224,7 @@ void solution_quicksort_02(Array &arr, int32_t n) {
 }
 
 void solution_quicksort_03(Array &arr, int32_t n) {
-  make_y_combinator([&](auto qsort, int32_t low, int32_t high) -> void {
+  [&](this const auto &qsort, int32_t low, int32_t high) -> void {
     if (low >= high) {
       return;
     }
@@ -249,11 +247,11 @@ void solution_quicksort_03(Array &arr, int32_t n) {
 
     qsort(low, lt - 1);
     qsort(lt + 1, high);
-  })(0, n - 1);
+  }(0, n - 1);
 }
 
 void solution_quicksort_04(Array &arr, int32_t n) {
-  make_y_combinator([&](auto qsort, int32_t low, int32_t high) -> void {
+  [&](this const auto &qsort, int32_t low, int32_t high) -> void {
     if (low >= high) {
       return;
     }
@@ -280,7 +278,7 @@ void solution_quicksort_04(Array &arr, int32_t n) {
 
     qsort(low, gt - 1);
     qsort(gt + 1, high);
-  })(0, n - 1);
+  }(0, n - 1);
 }
 
 void solution_quicksort_05(Array &arr, int32_t n) {
@@ -340,7 +338,7 @@ void solution_merge_sort(Array &arr, int32_t n) {
     }
   };
 
-  make_y_combinator([&](auto merge_sort, int32_t low, int32_t high) -> void {
+  [&](this const auto &merge_sort, int32_t low, int32_t high) -> void {
     if (low == high) {
       return;
     }
@@ -350,7 +348,7 @@ void solution_merge_sort(Array &arr, int32_t n) {
     merge_sort(mid + 1, high);
 
     merge(low, mid + 1, high);
-  })(0, n - 1);
+  }(0, n - 1);
 }
 
 void solution_radix_sort(Array &arr, int32_t n) {
