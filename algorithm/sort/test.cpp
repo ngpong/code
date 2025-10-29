@@ -1,13 +1,8 @@
 #include "common.hpp"
 
-void solution_quicksort_03(Array &arr, int32_t n) {
-  std::function<void(int32_t, int32_t)> qsort = [&](int32_t low, int32_t high) -> void {
-    if (low >= high) {
-      return;
-    }
-
+void solution_quicksort_02(Array &arr, int32_t n) {
+  auto partition = [&](int32_t low, int32_t high) -> int32_t {
     int32_t pivot = arr[low];
-
     int32_t lt = low, gt = high;
     while (lt < gt) {
       while (lt < gt && arr[gt] >= pivot) {
@@ -20,19 +15,30 @@ void solution_quicksort_03(Array &arr, int32_t n) {
         std::swap(arr[lt], arr[gt]);
       }
     }
-    std::swap(arr[low], arr[lt]);
+    std::swap(arr[lt], arr[low]);
 
-    qsort(low, lt - 1);
-    qsort(lt + 1, high);
+    return lt;
   };
-  qsort(0, n - 1);
+
+  std::stack<std::tuple<int32_t, int32_t>> s;
+  s.push({ 0, n - 1 });
+  while (!s.empty()) {
+    auto [low, high] = s.top(); s.pop();
+    if (low >= high) {
+      continue;
+    }
+
+    int32_t mid = partition(low, high);
+    s.push({ mid + 1, high });
+    s.push({ low, mid - 1});
+  }
 }
 
 int32_t main(void) {
   std::vector<int32_t> arr = {
     9, 8, 7, 6, 5, 5, 5, 5, 4, 3, 2, 1
   };
-  solution_quicksort_03(arr, arr.size());
+  solution_quicksort_02(arr, arr.size());
 
   return EXIT_SUCCESS;
 }

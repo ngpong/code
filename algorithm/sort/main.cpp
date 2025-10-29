@@ -184,19 +184,16 @@ void solution_quicksort_01(Array &arr, int32_t n) {
 }
 
 void solution_quicksort_02(Array &arr, int32_t n) {
-  auto partition = [&](this const auto &partition, int32_t low, int32_t high) -> int32_t {
-    int32_t p = arr[low];
-
+  auto partition = [&](int32_t low, int32_t high) -> int32_t {
+    int32_t pivot = arr[low];
     int32_t lt = low, gt = high;
     while (lt < gt) {
-      while (lt < gt && arr[gt] >= p) {
-        --gt;
+      while (lt < gt && arr[gt] >= pivot) {
+        gt--;
       }
-
-      while (lt < gt && arr[lt] <= p) {
-        ++lt;
+      while (lt < gt && arr[lt] <= pivot) {
+        lt++;
       }
-
       if (lt < gt) {
         std::swap(arr[lt], arr[gt]);
       }
@@ -206,19 +203,17 @@ void solution_quicksort_02(Array &arr, int32_t n) {
     return lt;
   };
 
-  std::stack<int32_t> s;
-  s.push(0); s.push(n - 1);
+  std::stack<std::tuple<int32_t, int32_t>> s;
+  s.push({ 0, n - 1 });
   while (!s.empty()) {
-    int32_t high = s.top(); s.pop();
-    int32_t low = s.top(); s.pop();
-
+    auto [low, high] = s.top(); s.pop();
     if (low >= high) {
       continue;
     }
 
     int32_t mid = partition(low, high);
-    s.push(low); s.push(mid - 1);
-    s.push(mid + 1); s.push(high);
+    s.push({ mid + 1, high });
+    s.push({ low, mid - 1});
   }
 }
 
