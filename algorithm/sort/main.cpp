@@ -365,9 +365,7 @@ void solution_radix_sort(Array &arr, int32_t n) {
       sorter[--bucket[digit(arr[i], exp)]] = arr[i];
     }
 
-    for (int32_t i = 0; i < n; i++) {
-      arr[i] = sorter[i];
-    }
+    arr.swap(sorter);
   };
 
   int32_t max = arr[0];
