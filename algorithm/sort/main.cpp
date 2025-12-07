@@ -332,7 +332,7 @@ void solution_merge_sort(Array &arr, int32_t n) {
   };
 
   [&](this const auto &splice, int32_t low, int32_t high) -> void {
-    if (low == high) {
+    if (low >= high) {
       return;
     }
 
