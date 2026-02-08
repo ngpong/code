@@ -300,33 +300,22 @@ void solution_quicksort_05(Array &arr, int32_t n) {
 
 void solution_merge_sort(Array &arr, int32_t n) {
   auto merge = [&](int32_t low, int32_t mid, int32_t high) -> void {
-    int32_t lsize = mid - low;
-    Array larr(lsize);
-    for (int32_t i = low; i < mid; i++) {
-      larr[i - low] = arr[i];
-    }
-
-    int32_t rsize = high - mid + 1;
-    Array rarr(rsize);
-    for (int32_t i = mid; i <= high; i++) {
-      rarr[i - mid] = arr[i];
-    }
+    Array larr(arr.begin() + low, arr.begin() + mid);
+    Array rarr(arr.begin() + mid, arr.begin() + high + 1);
 
     int32_t i = 0, j = 0;
     int32_t k = low;
-    while (i < lsize && j < rsize) {
+    while (i < larr.size() && j < rarr.size()) {
       if (larr[i] < rarr[j]) {
         arr[k++] = larr[i++];
       } else {
         arr[k++] = rarr[j++];
       }
     }
-
-    while (i < lsize) {
+    while (i < larr.size()) {
       arr[k++] = larr[i++];
     }
-
-    while (j < rsize) {
+    while (j < rarr.size()) {
       arr[k++] = rarr[j++];
     }
   };
